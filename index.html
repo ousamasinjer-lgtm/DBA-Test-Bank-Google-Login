@@ -938,7 +938,7 @@ loginButton.addEventListener("click", async () => {
 
     try {
 
-        await signInWithPopup(auth, provider);
+        await signInWithRedirect(auth, provider);
 
     }
 
@@ -985,7 +985,25 @@ loginButton.addEventListener("click", async () => {
 
 });
 
+try {
+    await getRedirectResult(auth);
+} catch (error) {
+    console.error("Google Redirect Error:", error);
 
+    loginError.style.display = "block";
+
+    let message = "تعذر تسجيل الدخول. حاول مرة أخرى.";
+
+    if (error.code === "auth/unauthorized-domain") {
+        message = "دومين الموقع غير مضاف إلى Authorized domains في Firebase.";
+    } else if (error.code === "auth/popup-blocked") {
+        message = "المتصفح منع تسجيل الدخول. حاول مرة أخرى.";
+    } else if (error.code === "auth/network-request-failed") {
+        message = "حدثت مشكلة في الاتصال بالإنترنت.";
+    }
+
+    loginError.innerText = message;
+}
 onAuthStateChanged(auth, async (user) => {
 
     if(user) {
