@@ -351,16 +351,39 @@ function toggleSync(state){
   else led.classList.add('sync-sync');
 }
 
-function refreshSubjects(){
-  const subs = [...new Set(ALL_DATA.map(q => q.subject).filter(Boolean))];
-  const container = document.getElementById('subject-links');
+function refreshSubjects() {
+    const subs = [...new Set(
+        ALL_DATA
+            .map(q => String(q.subject ?? '').trim())
+            .filter(Boolean)
+    )];
 
-  container.innerHTML = subs.map(s => `
-    <div class="nav-link sub-item" onclick="startContent(${JSON.stringify(s)},event)">
-      <i class="fa-solid fa-hand-point-left moving-hand"></i>
-      <i class="fa-solid fa-chevron-left"></i> ${escapeHtml(s)}
-    </div>
-  `).join('');
+    const container = document.getElementById('subject-links');
+
+    if (!subs.length) {
+        container.innerHTML = `
+            <div style="text-align:center;padding:20px;color:#fca5a5">
+                لا توجد مواد متاحة حالياً
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = subs.map((s, index) => `
+        <div class="nav-link sub-item"
+             data-subject-index="${index}">
+            <i class="fa-solid fa-hand-point-left moving-hand"></i>
+            <i class="fa-solid fa-chevron-left"></i>
+            ${escapeHtml(s)}
+        </div>
+    `).join('');
+
+    // ربط الضغط بالمواد بعد إنشائها
+    container.querySelectorAll('.sub-item').forEach((item, index) => {
+        item.addEventListener('click', function(event) {
+            startContent(subs[index], event);
+        });
+    });
 }
 
 function switchMode(type,ev){
@@ -383,75 +406,107 @@ function switchMode(type,ev){
 /* =========================
    Start / Restore
    ========================= */
-async function startContent(sub,ev){
-  if(!auth.currentUser){
-    alert('يرجى تسجيل الدخول بحساب Google أولاً.');
-    return;
-  }
+async function startContent(sub, ev) {
 
-  CURRENT_SUBJECT = sub;
-  document.getElementById('sidebar-main').classList.remove('flash-alert');
-
-  document.querySelectorAll('.sub-item').forEach(el => el.classList.remove('active'));
-  if(ev && ev.currentTarget) ev.currentTarget.classList.add('active');
-
-  const filtered = ALL_DATA.filter(q => String(q.subject ?? '').trim() === String(sub ?? '').trim());
-  if(!filtered.length){
-    document.getElementById('content-area').innerHTML = `\n      <div style="text-align:center;padding-top:100px;color:#fca5a5">\n        <h3>لم يتم العثور على أسئلة لهذه المادة</h3>\n        <p>تحقق من اسم المادة في Google Sheets.</p>\n      </div>`;
-    toggleSync('error');
-    return;
-  }
-
-  // مهم: عرض الأسئلة فوراً ولا نجعل Firestore يمنع فتح المادة.
-  toggleSync('sync');
-  SHUFFLED_QUESTIONS = [...filtered].sort(() => Math.random() - .5);
-  USER_ANSWERS = {};
-  CURRENT_PROGRESS_ID = progressDocId(sub,MODE);
-  renderQuestions();
-
-  // استرجاع التقدم في الخلفية مع مهلة، حتى لو كان Firestore غير مضبوط لن تختفي الأسئلة.
-  let restored = null;
-  try {
-    restored = await Promise.race([
-      loadProgress(sub,MODE),
-      new Promise(resolve => setTimeout(() => resolve(null), 4000))
-    ]);
-  } catch(e) {
-    console.warn('Progress restore skipped:', e);
-  }
-
-  if(restored && restored.questionIds && restored.questionIds.length){
-    const map = new Map(filtered.map(q => [questionKey(q),q]));
-    const restoredQuestions = restored.questionIds.map(id => map.get(id)).filter(Boolean);
-
-    if(restoredQuestions.length === filtered.length){
-      SHUFFLED_QUESTIONS = restoredQuestions;
-    }else{
-      SHUFFLED_QUESTIONS = [...filtered].sort(() => Math.random() - .5);
+    if (!auth.currentUser) {
+        alert('يرجى تسجيل الدخول بحساب Google أولاً.');
+        return;
     }
 
-    USER_ANSWERS = restored.answers || {};
-    CURRENT_PROGRESS_ID = progressDocId(sub,MODE);
+    sub = String(sub ?? '').trim();
 
+    CURRENT_SUBJECT = sub;
+
+    document.getElementById('sidebar-main').classList.remove('flash-alert');
+
+    document.querySelectorAll('.sub-item').forEach(el => {
+        el.classList.remove('active');
+    });
+
+    if (ev && ev.currentTarget) {
+        ev.currentTarget.classList.add('active');
+    }
+
+    const filtered = ALL_DATA.filter(q =>
+        String(q.subject ?? '').trim() === sub
+    );
+
+    if (!filtered.length) {
+        document.getElementById('content-area').innerHTML = `
+            <div style="text-align:center;padding-top:100px;color:#fca5a5">
+                <h3>لم يتم العثور على أسئلة لهذه المادة</h3>
+                <p>تحقق من اسم المادة في Google Sheets.</p>
+            </div>
+        `;
+        toggleSync('error');
+        return;
+    }
+
+    toggleSync('sync');
+
+    SHUFFLED_QUESTIONS = [...filtered].sort(() => Math.random() - 0.5);
+    USER_ANSWERS = {};
+
+    CURRENT_PROGRESS_ID = progressDocId(sub, MODE);
+
+    // عرض الأسئلة فوراً
     renderQuestions();
 
-    restoreAnswerVisuals();
+    // استرجاع الحفظ في الخلفية
+    let restored = null;
 
-    if(restored.completed){
-      const score = calculateScore();
-      const wrongs = buildWrongAnswers();
-      showEvaluation(score,SHUFFLED_QUESTIONS.length,Math.round((score/SHUFFLED_QUESTIONS.length)*100),wrongs);
-      return;
+    try {
+        restored = await Promise.race([
+            loadProgress(sub, MODE),
+            new Promise(resolve => setTimeout(() => resolve(null), 4000))
+        ]);
+    } catch (e) {
+        console.warn('Progress restore skipped:', e);
     }
 
-    showSaveMessage('تم استرجاع تقدمك السابق ✓');
-  }else{
-    // الأسئلة تم عرضها بالفعل قبل محاولة استرجاع Firestore.
-    showSaveMessage('بدأ اختبار جديد - الحفظ تلقائي');
-    saveProgress(false);
-  }
+    if (restored && restored.questionIds && restored.questionIds.length) {
 
-  toggleSync('ok');
+        const map = new Map(
+            filtered.map(q => [questionKey(q), q])
+        );
+
+        const restoredQuestions = restored.questionIds
+            .map(id => map.get(id))
+            .filter(Boolean);
+
+        if (restoredQuestions.length === filtered.length) {
+            SHUFFLED_QUESTIONS = restoredQuestions;
+        }
+
+        USER_ANSWERS = restored.answers || {};
+
+        renderQuestions();
+        restoreAnswerVisuals();
+
+        if (restored.completed) {
+            const score = calculateScore();
+            const wrongs = buildWrongAnswers();
+
+            showEvaluation(
+                score,
+                SHUFFLED_QUESTIONS.length,
+                Math.round((score / SHUFFLED_QUESTIONS.length) * 100),
+                wrongs
+            );
+
+            return;
+        }
+
+        showSaveMessage('تم استرجاع تقدمك السابق ✓');
+
+    } else {
+
+        showSaveMessage('بدأ اختبار جديد - الحفظ تلقائي');
+
+        saveProgress(false);
+    }
+
+    toggleSync('ok');
 }
 
 function renderQuestions(){
