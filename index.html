@@ -5,1619 +5,1453 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PhD HRM | Suez Canal University 2026</title>
 
-<link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
 :root{
-  --scu-gold:#d4af37;
-  --scu-blue:#003366;
-  --neon-cyan:#00f2ff;
-  --glass:rgba(15,23,42,.95);
-  --success:#22c55e;
-  --danger:#ef4444;
+    --scu-gold:#d4af37;
+    --scu-blue:#003366;
+    --neon-cyan:#00f2ff;
+    --glass:rgba(15,23,42,.95);
+    --success:#22c55e;
+    --danger:#ef4444;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  margin:0;
-  padding:0;
-  background:#020617;
-  color:#fff;
-  font-family:"Segoe UI",Tahoma,Arial,sans-serif;
-  display:flex;
-  flex-direction:row;
-  min-height:100vh;
+    margin:0;padding:0;background:#020617;color:#fff;
+    font-family:'Segoe UI',Tahoma,Arial,sans-serif;
+    display:flex;flex-direction:row;min-height:100vh;
 }
+body.app-locked{overflow:hidden}
 .sidebar{
-  width:300px;
-  background:var(--glass);
-  border-left:1px solid var(--scu-gold);
-  backdrop-filter:blur(20px);
-  position:sticky;
-  top:0;
-  height:100vh;
-  overflow-y:auto;
-  z-index:1000;
-  flex-shrink:0;
+    width:300px;background:var(--glass);border-left:1px solid var(--scu-gold);
+    backdrop-filter:blur(20px);position:sticky;top:0;height:100vh;
+    overflow-y:auto;z-index:1000;flex-shrink:0;transition:.5s ease;
 }
-.flash-alert{
-  animation:flash-animation 1.5s ease-in-out infinite;
-  border-left:3px solid var(--scu-gold)!important;
-}
+.flash-alert{animation:flash-animation 1.5s ease-in-out infinite;border-left:3px solid var(--scu-gold)!important}
 @keyframes flash-animation{
-  0%,100%{box-shadow:inset 0 0 0 var(--scu-gold)}
-  50%{box-shadow:inset 0 0 20px var(--scu-gold);background:rgba(212,175,55,.1)}
+    0%,100%{box-shadow:inset 0 0 0 var(--scu-gold)}
+    50%{box-shadow:inset 0 0 20px var(--scu-gold);background:rgba(212,175,55,.1)}
 }
-.moving-hand{
-  display:inline-block;
-  animation:move-hand 1.2s infinite;
-  color:var(--scu-gold);
-  margin-left:8px;
-}
-@keyframes move-hand{
-  0%,100%{transform:translateX(0)}
-  50%{transform:translateX(-10px)}
-}
-.sidebar-brand{
-  padding:25px;
-  text-align:center;
-  border-bottom:1px solid rgba(255,255,255,.1);
-}
-.nav-group{
-  padding:15px;
-  border-bottom:1px solid rgba(255,255,255,.05);
-}
-.nav-label{
-  font-size:.75rem;
-  color:var(--scu-gold);
-  margin-bottom:10px;
-  display:block;
-}
+.moving-hand{display:inline-block;animation:move-hand 1.2s infinite;color:var(--scu-gold);margin-left:8px}
+@keyframes move-hand{0%,100%{transform:translateX(0)}50%{transform:translateX(-10px)}}
+.sidebar-brand{padding:25px;text-align:center;border-bottom:1px solid rgba(255,255,255,.1)}
+.nav-group{padding:15px;border-bottom:1px solid rgba(255,255,255,.05)}
+.nav-label{font-size:.75rem;color:var(--scu-gold);text-transform:uppercase;margin-bottom:10px;display:block}
 .nav-link{
-  padding:12px 15px;
-  color:#cbd5e1;
-  text-decoration:none;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  border-radius:10px;
-  transition:.3s;
-  margin-bottom:5px;
+    padding:12px 15px;color:#cbd5e1;text-decoration:none;cursor:pointer;
+    display:flex;align-items:center;gap:10px;border-radius:10px;transition:.3s;margin-bottom:5px
 }
-.nav-link:hover,.nav-link.active{
-  background:rgba(212,175,55,.15);
-  color:#fff;
-}
-.main-content{
-  flex:1;
-  padding:25px;
-  width:100%;
-  max-width:1100px;
-  margin:0 auto;
-  padding-bottom:70px;
-}
+.nav-link:hover,.nav-link.active{background:rgba(212,175,55,.15);color:#fff}
+.main-content{flex:1;padding:25px;width:100%;max-width:1100px;margin:0 auto}
 .official-header{
-  background:linear-gradient(90deg,var(--scu-blue),#001f3f);
-  padding:20px;
-  border-radius:15px;
-  border:1px solid var(--scu-gold);
-  margin-bottom:25px;
-  text-align:center;
-  position:relative;
+    background:linear-gradient(90deg,var(--scu-blue),#001f3f);padding:20px;border-radius:15px;
+    border:1px solid var(--scu-gold);margin-bottom:25px;text-align:center;position:relative
 }
-.clock{
-  font-size:1.2rem;
-  font-weight:bold;
-  color:var(--scu-gold);
-  position:absolute;
-  top:20px;
-  left:25px;
+.clock{font-size:1.2rem;font-weight:bold;color:var(--scu-gold);position:absolute;top:20px;left:25px}
+.admin-box{
+    background:var(--glass);padding:clamp(15px,4vw,30px);border-radius:20px;
+    border:1px solid var(--neon-cyan);max-width:100%;margin:0 auto;
+    box-shadow:0 10px 40px rgba(0,0,0,.5)
 }
-.sync-led{
-  display:inline-block;
-  width:14px;
-  height:14px;
-  border-radius:50%;
-  margin-left:5px;
-  vertical-align:middle;
+.table-container{width:100%;overflow-x:auto;margin-bottom:25px;border-radius:12px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);scrollbar-width:thin;scrollbar-color:var(--neon-cyan) transparent}
+.table-container::-webkit-scrollbar{height:6px}.table-container::-webkit-scrollbar-thumb{background:var(--neon-cyan);border-radius:10px}
+table{width:100%;min-width:600px;border-collapse:separate;border-spacing:0}
+table thead th{position:sticky;top:0;background:#0f172a;color:var(--scu-gold);z-index:2;padding:15px 10px;font-size:.85rem;border-bottom:2px solid var(--scu-gold)}
+table td{padding:12px 10px;border-bottom:1px solid rgba(255,255,255,.05)}
+.admin-card{transition:all .3s ease;border:1px solid rgba(255,255,255,.1)!important}
+.admin-card:hover{border-color:var(--scu-gold)!important;background:rgba(212,175,55,.05)!important}
+.selected-card{border:1px solid var(--danger)!important;background:rgba(239,68,68,.1)!important;position:relative;transform:scale(.99)}
+.selected-card::after{content:"\f057";font-family:"Font Awesome 6 Free";font-weight:900;position:absolute;top:10px;left:10px;color:var(--danger)}
+.admin-box input,.admin-box textarea{
+    width:100%;padding:12px;margin-bottom:15px;border-radius:8px;background:rgba(0,0,0,.5);
+    color:#fff;border:1px solid rgba(255,255,255,.2);transition:.3s
 }
+.admin-box input:focus,.admin-box textarea:focus{border-color:var(--neon-cyan);outline:none;box-shadow:0 0 10px rgba(0,242,255,.2)}
+.sync-led{display:inline-block;width:14px;height:14px;border-radius:50%;margin-left:5px;vertical-align:middle}
 .sync-green{background:var(--success);box-shadow:0 0 10px var(--success)}
 .sync-red{background:var(--danger);box-shadow:0 0 10px var(--danger)}
 .sync-sync{background:var(--scu-gold);animation:pulse 1s infinite}
-@keyframes pulse{
-  0%{opacity:1}50%{opacity:.3}100%{opacity:1}
-}
-.stats-bar{
-  display:flex;
-  justify-content:center;
-  gap:15px;
-  margin-bottom:20px;
-  position:sticky;
-  top:10px;
-  z-index:90;
-}
-.pill{
-  background:var(--glass);
-  padding:8px 18px;
-  border-radius:50px;
-  border:1px solid var(--scu-gold);
-  font-size:.85rem;
-  backdrop-filter:blur(10px);
-}
-.q-stream-card{
-  background:#fff!important;
-  color:#111!important;
-  border:1px solid #d8d8d8!important;
-  border-right:6px solid #111!important;
-  border-radius:18px!important;
-  padding:28px!important;
-  margin-bottom:22px!important;
-  box-shadow:0 8px 25px rgba(0,0,0,.08)!important;
-  transition:.25s;
-  animation:fadeIn .5s ease;
-}
-.q-stream-card:hover{
-  transform:translateY(-2px);
-  box-shadow:0 14px 35px rgba(0,0,0,.12)!important;
-}
-.q-stream-card h3{
-  color:#111!important;
-  line-height:1.9;
-  font-size:1.18rem;
-  font-weight:700;
-  margin-bottom:22px;
-}
-.q-number{
-  display:inline-block;
-  background:#f3f3f3;
-  color:#444!important;
-  padding:6px 14px;
-  border-radius:30px;
-  font-size:.82rem;
-  font-weight:bold;
-  margin-bottom:18px;
-  border:1px solid #ddd;
-}
-.opt-btn{
-  background:#fff!important;
-  border:2px solid #d7d7d7!important;
-  border-radius:14px!important;
-  padding:18px 20px!important;
-  margin-top:14px!important;
-  color:#111!important;
-  font-weight:600;
-  transition:.25s;
-  cursor:pointer;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  width:100%;
-  text-align:right;
-  font-family:inherit;
-  font-size:1rem;
-}
-.opt-btn:hover{
-  background:#f7f7f7!important;
-  border-color:#111!important;
-  transform:translateX(-4px);
-}
-.opt-btn.selected{
-  background:#111!important;
-  color:#fff!important;
-  border-color:#111!important;
-}
-.opt-btn.correct{
-  background:#eef9f1!important;
-  color:#155724!important;
-  border:2px solid #2e7d32!important;
-  font-weight:700;
-}
-.opt-btn.wrong{
-  background:#fff5f5!important;
-  color:#b71c1c!important;
-  border:2px solid #d32f2f!important;
-  font-weight:700;
-}
-.opt-btn.correct::after{
-  content:"✓ صحيحة";
-  background:#2e7d32;
-  color:#fff;
-  padding:4px 10px;
-  border-radius:20px;
-  font-size:.75rem;
-  margin-right:10px;
-}
-.opt-btn.wrong::after{
-  content:"✕ خطأ";
-  background:#d32f2f;
-  color:#fff;
-  padding:4px 10px;
-  border-radius:20px;
-  font-size:.75rem;
-  margin-right:10px;
-}
+@keyframes pulse{0%{opacity:1}50%{opacity:.3}100%{opacity:1}}
+.q-stream-card{background:var(--glass);border-radius:20px;padding:25px;margin-bottom:20px;border:1px solid rgba(255,255,255,.1);animation:fadeIn .5s ease}
+.opt-btn{background:rgba(255,255,255,.05);padding:15px;margin-top:10px;border-radius:12px;border:1px solid rgba(255,255,255,.1);cursor:pointer;display:flex;justify-content:space-between;transition:.2s}
+.opt-btn:hover{border-color:rgba(212,175,55,.6)}
+.opt-btn.selected{border-color:var(--scu-gold);background:rgba(212,175,55,.1)}
+.opt-btn.correct{background:var(--success)!important;color:#fff;border-color:var(--success)}
+.opt-btn.wrong{background:var(--danger)!important;color:#fff;border-color:var(--danger)}
 .locked{pointer-events:none}
-.btn-main{
-  background:var(--scu-gold);
-  color:#000;
-  border:none;
-  padding:18px 30px;
-  border-radius:12px;
-  font-weight:900;
-  cursor:pointer;
-  width:100%;
-  margin-top:15px;
-  transition:.3s;
-}
-.btn-main:hover{
-  transform:translateY(-3px);
-  box-shadow:0 5px 15px rgba(212,175,55,.3);
-}
-.btn-google{
-  background:#fff;
-  color:#222;
-  border:none;
-  padding:14px 20px;
-  border-radius:12px;
-  font-weight:800;
-  cursor:pointer;
-  width:100%;
-  transition:.3s;
-}
-.btn-google:hover{
-  transform:translateY(-2px);
-  box-shadow:0 8px 20px rgba(0,0,0,.2);
-}
-.btn-google:disabled{opacity:.65;cursor:wait}
-.btn-logout{
-  background:transparent;
-  color:#fff;
-  border:1px solid rgba(255,255,255,.25);
-  padding:8px 14px;
-  border-radius:10px;
-  cursor:pointer;
-}
-.login-screen{
-  position:fixed;
-  inset:0;
-  background:radial-gradient(circle at top,#003366,#020617 65%);
-  z-index:99999;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-}
-.login-card{
-  width:min(460px,100%);
-  background:rgba(15,23,42,.97);
-  border:1px solid var(--scu-gold);
-  border-radius:25px;
-  padding:35px;
-  box-shadow:0 25px 70px rgba(0,0,0,.65);
-  text-align:center;
-}
-.user-card{
-  background:rgba(0,242,255,.06);
-  border:1px solid rgba(0,242,255,.25);
-  padding:12px;
-  border-radius:15px;
-  margin:15px 0;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-}
-.user-card img{
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  border:2px solid var(--scu-gold);
-}
-.save-status{
-  font-size:.78rem;
-  color:#cbd5e1;
-  margin-top:8px;
-}
-.eval-panel{
-  background:linear-gradient(135deg,#001f3f,#020617);
-  padding:40px;
-  border-radius:25px;
-  border:2px solid var(--scu-gold);
-  text-align:center;
-  margin-top:40px;
-}
+.stats-bar{display:flex;justify-content:center;gap:15px;margin-bottom:20px;position:sticky;top:10px;z-index:90;flex-wrap:wrap}
+.pill{background:var(--glass);padding:8px 18px;border-radius:50px;border:1px solid var(--scu-gold);font-size:.85rem;backdrop-filter:blur(10px)}
+.eval-panel{background:linear-gradient(135deg,#001f3f,#020617);padding:40px;border-radius:25px;border:2px solid var(--scu-gold);text-align:center;margin-top:40px}
+.btn-main{background:var(--scu-gold);color:#000;border:none;padding:18px 30px;border-radius:12px;font-weight:900;cursor:pointer;width:100%;margin-top:15px;transition:.3s}
+.btn-main:hover{transform:translateY(-3px);box-shadow:0 5px 15px rgba(212,175,55,.3)}
 .hidden{display:none!important}
-.status-box{
-  text-align:center;
-  padding:20px;
-  color:#cbd5e1;
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.auth-overlay{
+    position:fixed;inset:0;background:rgba(2,6,23,.97);z-index:20000;
+    display:flex;align-items:center;justify-content:center;padding:20px;
 }
-.error-box{color:#fca5a5!important}
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(10px)}
-  to{opacity:1;transform:translateY(0)}
+.auth-card{
+    width:min(520px,100%);background:linear-gradient(145deg,#0f172a,#020617);
+    border:2px solid var(--scu-gold);border-radius:28px;padding:35px;text-align:center;
+    box-shadow:0 30px 80px rgba(0,0,0,.75)
 }
+.google-btn{
+    display:flex;align-items:center;justify-content:center;gap:12px;width:100%;
+    border:1px solid rgba(255,255,255,.2);background:#fff;color:#111;
+    border-radius:12px;padding:15px;font-size:1rem;font-weight:800;cursor:pointer
+}
+.google-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(255,255,255,.12)}
+.user-chip{display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap}
+.user-chip img{width:38px;height:38px;border-radius:50%;border:2px solid var(--scu-gold)}
+.resume-card{
+    margin-top:20px;padding:18px;border-radius:16px;background:rgba(0,242,255,.06);
+    border:1px solid rgba(0,242,255,.3)
+}
+.toast{
+    position:fixed;bottom:25px;right:25px;z-index:30000;background:#0f172a;
+    border:1px solid var(--scu-gold);padding:14px 18px;border-radius:12px;box-shadow:0 10px 30px #000;
+    max-width:380px
+}
+.admin-tabs-nav{display:flex;background:rgba(0,0,0,.3);border-radius:15px;padding:5px;margin-bottom:25px;border:1px solid rgba(255,255,255,.05)}
+.admin-tab-btn{flex:1;padding:12px;border:none;background:transparent;color:#888;cursor:pointer;transition:.4s;font-weight:bold;font-size:.9rem;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:8px}
+.admin-tab-btn.active{background:var(--scu-gold);color:#000;box-shadow:0 4px 15px rgba(212,175,55,.3)}
+.tab-panel{display:none;animation:slideUp .4s ease-out}.tab-panel.active{display:block}
+.custom-scroll::-webkit-scrollbar{width:6px}.custom-scroll::-webkit-scrollbar-track{background:rgba(0,0,0,.2);border-radius:10px}.custom-scroll::-webkit-scrollbar-thumb{background:var(--scu-gold);border-radius:10px}
+@keyframes slideUp{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+
 @media(max-width:768px){
-  body{flex-direction:column}
-  .sidebar{
-    width:100%;
-    height:auto;
-    position:relative;
-    border-left:none;
-    border-bottom:1px solid var(--scu-gold);
-  }
-  .clock{
-    position:static;
-    margin-bottom:10px;
-    display:block;
-  }
-  .stats-bar{
-    flex-direction:column;
-    align-items:center;
-    position:static!important;
-  }
-  .pill{width:90%;text-align:center}
-  .q-stream-card{
-    padding:15px!important;
-    margin-bottom:15px;
-  }
-  .eval-panel div{font-size:3.5rem!important}
+    body{flex-direction:column}
+    .sidebar{width:100%;height:auto;position:relative;border-left:none;border-bottom:1px solid var(--scu-gold)}
+    .clock{position:static;margin-bottom:10px;display:block}
+    .stats-bar{position:static!important}
+    .pill{width:90%;text-align:center}
+    .admin-box{position:relative!important;top:auto!important;left:auto!important;right:auto!important;width:100%!important}
+    .q-stream-card{padding:15px;margin-bottom:15px}
+    .eval-panel div{font-size:3.5rem!important}
+    .main-content{padding:12px}
 }
+</style>
+<style>
+.answer-group{width:100%;}
+.answer-group.locked .opt-btn{cursor:default;}
+.instant-feedback{margin-top:14px;padding:13px 16px;border-radius:12px;font-weight:800;line-height:1.7;}
+.feedback-correct{background:#eef9f1;color:#155724;border:1px solid #2e7d32;}
+.feedback-wrong{background:#fff5f5;color:#b71c1c;border:1px solid #d32f2f;}
 </style>
 </head>
 
-<body>
+<body class="app-locked">
 
-<div id="login-screen" class="login-screen">
-  <div class="login-card">
-    <i class="fa-solid fa-graduation-cap fa-4x" style="color:var(--scu-gold)"></i>
-    <h2 style="margin:15px 0 5px">SCU PhD 2026</h2>
-    <h3 style="margin:0;color:var(--scu-gold)">DBA - Human Resources</h3>
-    <p style="color:#cbd5e1;line-height:1.8;margin:20px 0">
-      سجّل الدخول بحساب Google لحفظ تقدمك تلقائياً واستكمال الاختبار من نفس المكان عند العودة.
-    </p>
-    <button id="google-login-btn" class="btn-google" onclick="loginWithGoogle()">
-      <i class="fa-brands fa-google"></i> تسجيل الدخول باستخدام Google
-    </button>
-    <div id="login-error" style="color:#ff8b8b;margin-top:15px;font-size:.85rem"></div>
-  </div>
+<!-- تسجيل الدخول -->
+<div id="auth-overlay" class="auth-overlay">
+    <div class="auth-card">
+        <i class="fa-solid fa-graduation-cap fa-4x" style="color:var(--scu-gold)"></i>
+        <h1 style="margin:15px 0 5px">SCU PhD 2026</h1>
+        <h3 style="color:var(--scu-gold)">دكتوراه إدارة الأعمال - موارد بشرية</h3>
+        <p style="opacity:.8;line-height:1.8">
+            يرجى تسجيل الدخول بحساب Google لحفظ تقدمك تلقائيًا،
+            واستكمال الاختبار من نفس المكان عند العودة.
+        </p>
+
+        <button id="google-login-btn" class="google-btn" onclick="loginWithGoogle()">
+            <i class="fa-brands fa-google" style="font-size:1.25rem"></i>
+            تسجيل الدخول بحساب Google
+        </button>
+
+        <div id="auth-error" style="color:var(--danger);margin-top:15px"></div>
+        <div style="font-size:.75rem;opacity:.5;margin-top:20px">
+            يتم استخدام حساب Google للتعرف على المستخدم وحفظ تقدمه فقط.
+        </div>
+    </div>
 </div>
 
 <header class="official-header">
-  <h3 style="margin:0;letter-spacing:1px">جامعة قناة السويس - كلية التجارة</h3>
-  <div class="clock" id="clock">00:00:00</div>
+    <h3 style="margin:0;letter-spacing:1px">جامعة قناة السويس - كلية التجارة</h3>
+    <div class="clock" id="clock">00:00:00</div>
 
-  <div style="margin:10px 0;font-size:.85rem;opacity:.9">
-    <span>حالة الاتصال: <span id="sync-led" class="sync-led sync-red"></span></span>
-  </div>
-
-  <div id="user-area" class="user-card hidden">
-    <div style="display:flex;align-items:center;gap:10px;text-align:right">
-      <img id="user-photo" src="" alt="">
-      <div>
-        <div id="user-name" style="font-weight:900"></div>
-        <div id="user-email" style="font-size:.75rem;color:#cbd5e1"></div>
-      </div>
+    <div style="margin:10px 0;font-size:.85rem;opacity:.9">
+        حالة الاتصال:
+        <span id="sync-led" class="sync-led sync-red"></span>
     </div>
-    <button class="btn-logout" onclick="logoutUser()">خروج</button>
-  </div>
 
-  <div style="display:flex;justify-content:center;gap:12px;margin:15px 0;flex-wrap:wrap">
-    <div style="background:rgba(0,242,255,.1);border:1px solid var(--neon-cyan);padding:5px 12px;border-radius:50px;display:flex;align-items:center;gap:8px">
-      <i class="fa-solid fa-user-check" style="color:var(--neon-cyan)"></i>
-      <span style="font-size:.8rem;color:#eee">المستخدمين:</span>
-      <span id="user-count" style="color:var(--neon-cyan);font-weight:bold">...</span>
+    <div class="user-chip" id="user-chip">
+        <span style="opacity:.65">لم يتم تسجيل الدخول</span>
     </div>
-    <div style="background:rgba(212,175,55,.1);border:1px solid var(--scu-gold);padding:5px 12px;border-radius:50px;display:flex;align-items:center;gap:8px">
-      <i class="fa-solid fa-graduation-cap" style="color:var(--scu-gold)"></i>
-      <span style="font-size:.8rem;color:#eee">المحاولات:</span>
-      <span id="attempt-count" style="color:var(--scu-gold);font-weight:bold">...</span>
-    </div>
-  </div>
 
-  <p style="color:var(--scu-gold);margin:5px 0 0;font-size:.9rem;font-weight:900;text-transform:uppercase;border-top:1px solid rgba(212,175,55,.2);display:inline-block;padding-top:10px">
-    دكتوراه إدارة الأعمال (DBA) - موارد بشرية - المستوى الخامس والأخير
-  </p>
+    <div style="display:flex;justify-content:center;gap:12px;margin:15px 0;flex-wrap:wrap">
+        <div style="background:rgba(0,242,255,.1);border:1px solid var(--neon-cyan);padding:5px 12px;border-radius:50px;display:flex;align-items:center;gap:8px">
+            <i class="fa-solid fa-user-check" style="color:var(--neon-cyan)"></i>
+            <span style="font-size:.8rem;color:#eee">المستخدمين:</span>
+            <span id="user-count" style="color:var(--neon-cyan);font-weight:bold">...</span>
+        </div>
+        <div style="background:rgba(212,175,55,.1);border:1px solid var(--scu-gold);padding:5px 12px;border-radius:50px;display:flex;align-items:center;gap:8px">
+            <i class="fa-solid fa-graduation-cap" style="color:var(--scu-gold)"></i>
+            <span style="font-size:.8rem;color:#eee">المحاولات:</span>
+            <span id="attempt-count" style="color:var(--scu-gold);font-weight:bold">...</span>
+        </div>
+    </div>
+
+    <p style="color:var(--scu-gold);margin:5px 0 0;font-size:.9rem;font-weight:900;text-transform:uppercase;border-top:1px solid rgba(212,175,55,.2);display:inline-block;padding-top:10px">
+        دكتوراه إدارة الأعمال (DBA) - موارد بشرية - المستوى الرابع
+    </p>
 </header>
 
 <aside class="sidebar" id="sidebar-main">
-  <div class="sidebar-brand">
-    <i class="fa-solid fa-graduation-cap fa-3x" style="color:var(--scu-gold)"></i>
-    <h4 style="margin:10px 0 0">SCU PhD 2026</h4>
-    <div id="save-status" class="save-status">يتم الحفظ تلقائياً</div>
-  </div>
-
-  <div class="nav-group">
-    <span class="nav-label">نظام الاختبارات</span>
-
-    <div id="btn-exam" class="nav-link active" onclick="switchMode('exam',event)">
-      <i class="fa-solid fa-pen-to-square"></i>
-      وضع الاختبار الفعلي
+    <div class="sidebar-brand">
+        <i class="fa-solid fa-graduation-cap fa-3x" style="color:var(--scu-gold)"></i>
+        <h4 style="margin:10px 0 0">SCU PhD 2026</h4>
+        <div id="admin-badge" class="hidden" style="color:var(--success);font-size:.75rem;margin-top:8px">
+            <i class="fa-solid fa-shield-halved"></i> مدير النظام
+        </div>
     </div>
 
-    <div id="btn-study" class="nav-link" onclick="switchMode('study',event)">
-      <i class="fa-solid fa-book-open"></i>
-      وضع المذاكرة
+    <div class="nav-group">
+        <span class="nav-label">نظام الاختبارات</span>
+        <div id="btn-exam" class="nav-link active" onclick="switchMode('exam',event)">
+            <i class="fa-solid fa-pen-to-square"></i> وضع الاختبار الفعلي
+        </div>
+        <div id="btn-study" class="nav-link" onclick="switchMode('study',event)">
+            <i class="fa-solid fa-book-open"></i> وضع المذاكرة (محلول)
+        </div>
     </div>
-  </div>
 
-  <div class="nav-group">
-    <span class="nav-label">اختر المادة العلمية</span>
-    <div id="subject-links">
-      <div class="status-box">جاري التحميل...</div>
+    <div class="nav-group">
+        <span class="nav-label">اختر المادة العلمية</span>
+        <div id="subject-links">
+            <div style="text-align:center;padding:10px;opacity:.5;font-size:.8rem">جاري التحميل...</div>
+        </div>
     </div>
-  </div>
+
+    <div class="nav-group" id="admin-nav-group">
+        <span class="nav-label">الإدارة</span>
+        <div id="admin-link" class="nav-link hidden" onclick="loadAdmin()">
+            <i class="fa-solid fa-user-shield"></i> لوحة التحكم
+        </div>
+    </div>
+
+    <div class="nav-group">
+        <div class="nav-link" onclick="logoutGoogle()">
+            <i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج
+        </div>
+    </div>
 </aside>
 
 <main class="main-content">
-
-  <div id="stats-area" class="stats-bar hidden">
-    <div class="pill">المادة: <span id="active-sub-name">-</span></div>
-    <div class="pill">المتبقي: <span id="rem-q">0</span></div>
-  </div>
-
-  <div id="content-area">
-    <div style="text-align:center;padding-top:100px;opacity:.6">
-      <i class="fa-solid fa-hand-pointer fa-4x" style="color:var(--scu-gold)"></i>
-      <h3>سجّل الدخول ثم اختر المادة لبدء الأسئلة</h3>
+    <div id="stats-area" class="stats-bar hidden">
+        <div class="pill">المادة: <span id="active-sub-name">-</span></div>
+        <div class="pill">المتبقي: <span id="rem-q">0</span></div>
+        <div class="pill">الحفظ: <span id="save-status">جاهز</span></div>
     </div>
-  </div>
 
-  <div id="action-footer" class="hidden" style="margin-top:30px;padding-bottom:50px">
-    <button class="btn-main" onclick="submitFinalExam()">
-      اعتماد النتيجة النهائية وعرض التقييم
-      <i class="fa-solid fa-flag-checkered"></i>
-    </button>
-  </div>
+    <div id="content-area">
+        <div style="text-align:center;padding-top:100px;opacity:.6">
+            <i class="fa-solid fa-hand-pointer fa-4x" style="color:var(--scu-gold)"></i>
+            <h3>يرجى اختيار المادة من القائمة الجانبية لبدء الأسئلة</h3>
+        </div>
+    </div>
 
-  <div id="evaluation-result" class="hidden"></div>
+    <div id="action-footer" class="hidden" style="margin-top:30px;padding-bottom:50px">
+        <button class="btn-main" onclick="submitFinalExam()">
+            اعتماد النتيجة النهائية وعرض التقييم
+            <i class="fa-solid fa-flag-checkered"></i>
+        </button>
+    </div>
+
+    <div id="evaluation-result" class="hidden"></div>
 </main>
 
-<footer style="position:fixed;bottom:0;left:0;right:0;text-align:center;padding:8px;background:rgba(15,23,42,.85);color:rgba(255,255,255,.5);font-size:.75rem;z-index:80">
-  &copy; 2026 <span style="color:var(--scu-gold);font-weight:bold">OSAMA SINGER</span>. All Rights Reserved.
-</footer>
+<div id="toast" class="toast hidden"></div>
 
-<script>
+<script type="module">
+import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+
+import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    signInWithRedirect,
+    getRedirectResult,
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+import {
+    getFirestore,
+    doc,
+    getDoc,
+    setDoc,
+    deleteDoc
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
 /* =========================================================
-   Firebase configuration
+   Firebase configuration - مشروعك
    ========================================================= */
 const firebaseConfig = {
-  apiKey: "AIzaSyAtg86r1kyDx-GGmI5TEevIboWF-4awSr0",
-  authDomain: "ousamasinjerdba.firebaseapp.com",
-  projectId: "ousamasinjerdba",
-  storageBucket: "ousamasinjerdba.firebasestorage.app",
-  messagingSenderId: "12987352709",
-  appId: "1:12987352709:web:4c2fac29c57bb240508bec",
-  measurementId: "G-3ENSQKGEXK"
+    apiKey: "AIzaSyAtg86r1kyDx-GGmI5TEevIboWF-4awSr0",
+    authDomain: "ousamasinjerdba.firebaseapp.com",
+    projectId: "ousamasinjerdba",
+    storageBucket: "ousamasinjerdba.firebasestorage.app",
+    messagingSenderId: "12987352709",
+    appId: "1:12987352709:web:4c2fac29c57bb240508bec",
+    measurementId: "G-3ENSQKGEXK"
 };
 
-firebase.initializeApp(firebaseConfig);
-
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-const googleProvider = new firebase.auth.GoogleAuthProvider();
-googleProvider.setCustomParameters({prompt:"select_account"});
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
+const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: "select_account" });
 
 /* =========================================================
-   Google Apps Script API
+   إعدادات الموقع
    ========================================================= */
-const API_URL =
-  "https://script.google.com/macros/s/AKfycbzKiv0gdZyb9CZqKl8UHD2O-S5RvHsvaF0RdEfz2ADwgY6HvsZRpC5-t5AmaCMn7dVF/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzKiv0gdZyb9CZqKl8UHD2O-S5RvHsvaF0RdEfz2ADwgY6HvsZRpC5-t5AmaCMn7dVF/exec";
+const ADMIN_EMAIL = "ousamasinjer@gmail.com";
+const PROGRESS_COLLECTION = "userProgress";
 
-/* =========================================================
-   Global state
-   ========================================================= */
 let ALL_DATA = [];
 let USER_ANSWERS = {};
 let MODE = "exam";
 let SHUFFLED_QUESTIONS = [];
-let CURRENT_SUBJECT = "";
-let CURRENT_PROGRESS_ID = null;
-let SAVE_TIMER = null;
+let ADMIN_DATA = [];
+let EDIT_INDEX = null;
+let CURRENT_USER = null;
+let CURRENT_SUBJECT = null;
+let CURRENT_PROGRESS_ID = "current";
+let saveTimer = null;
+let resumeOfferShown = false;
+window.allLogs = [];
 
 /* =========================================================
-   Clock
+   Firebase / Auth
    ========================================================= */
-setInterval(() => {
-  const c = document.getElementById("clock");
-  if(c) c.innerText = new Date().toLocaleTimeString("ar-EG");
-},1000);
-
-/* =========================================================
-   Authentication
-   ========================================================= */
-async function loginWithGoogle(){
-  const btn = document.getElementById("google-login-btn");
-  const error = document.getElementById("login-error");
-
-  btn.disabled = true;
-  btn.innerHTML =
-    '<i class="fa-solid fa-spinner fa-spin"></i> جاري تسجيل الدخول...';
-  error.innerText = "";
-
-  try{
-    await auth.signInWithPopup(googleProvider);
-  }catch(e){
-    console.error(e);
-    error.innerText = friendlyAuthError(e);
-    btn.disabled = false;
-    btn.innerHTML =
-      '<i class="fa-brands fa-google"></i> تسجيل الدخول باستخدام Google';
-  }
+function isAdmin(){
+    return !!CURRENT_USER &&
+        String(CURRENT_USER.email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
 }
 
-function friendlyAuthError(e){
-  if(e?.code === "auth/popup-blocked")
-    return "المتصفح منع نافذة Google. اسمح بالنوافذ المنبثقة للموقع ثم حاول مرة أخرى.";
+window.loginWithGoogle = async function(){
+    const btn = document.getElementById("google-login-btn");
+    const errorBox = document.getElementById("auth-error");
 
-  if(e?.code === "auth/unauthorized-domain")
-    return "الدومين الحالي غير مضاف إلى Authorized domains في Firebase Authentication.";
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري تسجيل الدخول...';
+    errorBox.innerText = "";
 
-  if(e?.code === "auth/operation-not-allowed")
-    return "Google Sign-In غير مفعّل في Firebase Authentication.";
+    try{
+        await signInWithPopup(auth, googleProvider);
+    }catch(error){
+        console.error(error);
 
-  if(e?.code === "auth/popup-closed-by-user")
-    return "تم إغلاق نافذة تسجيل الدخول قبل إتمام العملية.";
+        /* بعض متصفحات الهاتف/إعدادات الحظر تمنع popup */
+        if(
+            error.code === "auth/popup-blocked" ||
+            error.code === "auth/popup-closed-by-user"
+        ){
+            try{
+                await signInWithRedirect(auth, googleProvider);
+                return;
+            }catch(e2){
+                console.error(e2);
+            }
+        }
 
-  if(e?.code === "auth/network-request-failed")
-    return "يوجد مشكلة في الاتصال بالإنترنت.";
+        errorBox.innerText = friendlyAuthError(error);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-brands fa-google"></i> تسجيل الدخول بحساب Google';
+    }
+};
 
-  return "تعذر تسجيل الدخول. راجع إعدادات Firebase ثم حاول مرة أخرى.";
+window.logoutGoogle = async function(){
+    try{
+        await saveProgressNow(true);
+        await signOut(auth);
+        location.reload();
+    }catch(error){
+        console.error(error);
+        await signOut(auth);
+        location.reload();
+    }
+};
+
+function friendlyAuthError(error){
+    const code = error?.code || "";
+    if(code.includes("unauthorized-domain"))
+        return "هذا الدومين غير مضاف في Firebase Authorized domains.";
+    if(code.includes("operation-not-allowed"))
+        return "لم يتم تفعيل تسجيل الدخول بحساب Google في Firebase.";
+    if(code.includes("popup-blocked"))
+        return "المتصفح منع نافذة Google. اسمح بالنوافذ المنبثقة ثم حاول مرة أخرى.";
+    if(code.includes("network-request-failed"))
+        return "تحقق من اتصال الإنترنت.";
+    return "تعذر تسجيل الدخول. راجع إعدادات Firebase ثم حاول مرة أخرى.";
 }
 
-async function logoutUser(){
-  try{
-    await auth.signOut();
-  }catch(e){
-    console.error(e);
-  }
+function showAuthenticatedUI(user){
+    const overlay = document.getElementById("auth-overlay");
+    const chip = document.getElementById("user-chip");
+
+    const photo = user.photoURL
+        ? `<img src="${escapeAttr(user.photoURL)}" alt="Google">`
+        : `<i class="fa-solid fa-user-circle fa-2x" style="color:var(--scu-gold)"></i>`;
+
+    chip.innerHTML = `
+        ${photo}
+        <span style="font-size:.85rem">${escapeHTML(user.displayName || user.email || "")}</span>
+        ${isAdmin() ? '<span style="color:var(--success);font-size:.75rem"><i class="fa-solid fa-shield-halved"></i> Admin</span>' : ""}
+    `;
+
+    overlay.classList.add("hidden");
+    document.body.classList.remove("app-locked");
+
+    document.getElementById("admin-link").classList.toggle("hidden", !isAdmin());
+    document.getElementById("admin-badge").classList.toggle("hidden", !isAdmin());
 }
 
-auth.onAuthStateChanged(async user => {
+onAuthStateChanged(auth, async (user)=>{
+    CURRENT_USER = user || null;
 
-  if(user){
+    if(!user){
+        document.getElementById("auth-overlay").classList.remove("hidden");
+        document.body.classList.add("app-locked");
+        return;
+    }
 
-    document.getElementById("login-screen").classList.add("hidden");
-    document.getElementById("user-area").classList.remove("hidden");
-
-    document.getElementById("user-name").innerText =
-      user.displayName || "مستخدم Google";
-
-    document.getElementById("user-email").innerText =
-      user.email || "";
-
-    const photo = document.getElementById("user-photo");
-    photo.src =
-      user.photoURL ||
-      "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
-
+    showAuthenticatedUI(user);
     toggleSync("sync");
 
-    await initializeAppForUser();
-
-  }else{
-
-    document.getElementById("login-screen").classList.remove("hidden");
-    document.getElementById("user-area").classList.add("hidden");
-
-    toggleSync("error");
-  }
+    try{
+        await loadMainData();
+        await updateVisitorDisplay();
+        await maybeOfferResume();
+        toggleSync("ok");
+    }catch(error){
+        console.error(error);
+        toggleSync("error");
+    }
 });
 
-/* =========================================================
-   Initialize
-   ========================================================= */
-async function initializeAppForUser(){
-
-  document.getElementById("sidebar-main").classList.add("flash-alert");
-
-  updateVisitorDisplay();
-
-  try{
-
-    const res = await fetch(
-      API_URL + "?nocache=" + Date.now(),
-      {
-        method:"GET",
-        cache:"no-store"
-      }
-    );
-
-    if(!res.ok)
-      throw new Error("HTTP " + res.status);
-
-    const data = await res.json();
-
-    if(!Array.isArray(data))
-      throw new Error("API did not return an array");
-
-    ALL_DATA = data.filter(q =>
-      q &&
-      String(q.question ?? "").trim() !== ""
-    );
-
-    refreshSubjects();
-
-    if(ALL_DATA.length){
-      toggleSync("ok");
-    }else{
-      toggleSync("error");
-      document.getElementById("content-area").innerHTML = `
-        <div class="status-box error-box">
-          <h3>تم الاتصال بالمصدر ولكن لا توجد أسئلة.</h3>
-          <p>راجع Google Sheets وتأكد من وجود عمود question.</p>
-        </div>
-      `;
-    }
-
-  }catch(e){
-
-    console.error("Question API error:",e);
-    toggleSync("error");
-
-    document.getElementById("subject-links").innerHTML = `
-      <div class="status-box error-box">
-        تعذر تحميل المواد.
-      </div>
-    `;
-
-    document.getElementById("content-area").innerHTML = `
-      <div class="status-box error-box" style="padding-top:100px">
-        <h3>تعذر تحميل بنك الأسئلة</h3>
-        <p>تأكد من الاتصال بالإنترنت ومن أن Google Apps Script يعمل.</p>
-        <button class="btn-main" style="max-width:280px" onclick="initializeAppForUser()">
-          إعادة المحاولة
-        </button>
-      </div>
-    `;
-  }
-}
-
-/* =========================================================
-   Statistics
-   ========================================================= */
-async function updateVisitorDisplay(){
-
-  try{
-
-    const res = await fetch(
-      API_URL + "?action=getStats&nocache=" + Date.now(),
-      {cache:"no-store"}
-    );
-
-    if(!res.ok) return;
-
-    const result = await res.json();
-
-    if(result.status === "ok" && result.data){
-
-      document.getElementById("user-count").innerText =
-        result.data.users ?? "0";
-
-      document.getElementById("attempt-count").innerText =
-        result.data.attempts ?? "0";
-    }
-
-  }catch(e){
-    console.log("Stats fetch error",e);
-  }
-}
-
-async function trackUser(subject){
-
-  const user = auth.currentUser;
-  if(!user) return;
-
-  try{
-
-    const visitorKey = "scu_google_user_tracked_v1";
-    const isNew = !localStorage.getItem(visitorKey);
-
-    if(isNew)
-      localStorage.setItem(visitorKey,"true");
-
-    const res = await fetch(API_URL,{
-      method:"POST",
-      body:JSON.stringify({
-        action:"trackVisit",
-        subject:subject,
-        userName:user.email || user.uid,
-        isNewUser:isNew
-      })
-    });
-
-    const result = await res.json();
-
-    if(result.status === "success" && result.data){
-
-      document.getElementById("user-count").innerText =
-        result.data.users ?? "0";
-
-      document.getElementById("attempt-count").innerText =
-        result.data.attempts ?? "0";
-    }
-
-  }catch(e){
-    console.log("Visit tracking skipped",e);
-  }
-}
-
-/* =========================================================
-   UI
-   ========================================================= */
-function toggleSync(state){
-
-  const led = document.getElementById("sync-led");
-
-  led.className = "sync-led";
-
-  if(state === "ok")
-    led.classList.add("sync-green");
-  else if(state === "error")
-    led.classList.add("sync-red");
-  else
-    led.classList.add("sync-sync");
-}
-
-function refreshSubjects(){
-
-  const subjects = [
-    ...new Set(
-      ALL_DATA
-        .map(q => String(q.subject ?? "").trim())
-        .filter(Boolean)
-    )
-  ];
-
-  const container = document.getElementById("subject-links");
-
-  if(!subjects.length){
-
-    container.innerHTML = `
-      <div class="status-box error-box">
-        لا توجد مواد متاحة حالياً.
-      </div>
-    `;
-
-    return;
-  }
-
-  container.innerHTML = "";
-
-  subjects.forEach((subject,index) => {
-
-    const item = document.createElement("div");
-
-    item.className = "nav-link sub-item";
-
-    item.innerHTML = `
-      <i class="fa-solid fa-hand-point-left moving-hand"></i>
-      <i class="fa-solid fa-chevron-left"></i>
-      <span>${escapeHtml(subject)}</span>
-    `;
-
-    item.addEventListener("click",function(event){
-      startContent(subject,event);
-    });
-
-    container.appendChild(item);
-  });
-}
-
-function switchMode(type,ev){
-
-  MODE = type;
-
-  document.querySelectorAll(".nav-link").forEach(l =>
-    l.classList.remove("active")
-  );
-
-  if(ev?.currentTarget)
-    ev.currentTarget.classList.add("active");
-
-  document.querySelectorAll(".sub-item").forEach(l =>
-    l.classList.remove("active")
-  );
-
-  document.getElementById("content-area").innerHTML = `
-    <div style="text-align:center;padding-top:100px;opacity:.6">
-      <h3>
-        تم تغيير الوضع إلى
-        (${MODE === "exam" ? "الاختبار" : "المذاكرة"}).
-        اختر المادة مرة أخرى.
-      </h3>
-    </div>
-  `;
-
-  document.getElementById("action-footer").classList.add("hidden");
-  document.getElementById("stats-area").classList.add("hidden");
-  document.getElementById("evaluation-result").classList.add("hidden");
-
-  document.getElementById("sidebar-main").classList.add("flash-alert");
-}
-
-/* =========================================================
-   Start / Restore
-   ========================================================= */
-async function startContent(subject,ev){
-
-  if(!auth.currentUser){
-    alert("يرجى تسجيل الدخول بحساب Google أولاً.");
-    return;
-  }
-
-  subject = String(subject ?? "").trim();
-
-  if(!subject) return;
-
-  CURRENT_SUBJECT = subject;
-
-  document.getElementById("sidebar-main").classList.remove("flash-alert");
-
-  document.querySelectorAll(".sub-item").forEach(el =>
-    el.classList.remove("active")
-  );
-
-  if(ev?.currentTarget)
-    ev.currentTarget.classList.add("active");
-
-  const filtered = ALL_DATA.filter(q =>
-    String(q.subject ?? "").trim() === subject
-  );
-
-  if(!filtered.length){
-
-    document.getElementById("content-area").innerHTML = `
-      <div class="status-box error-box" style="padding-top:100px">
-        <h3>لم يتم العثور على أسئلة لهذه المادة</h3>
-        <p>تحقق من اسم المادة في Google Sheets.</p>
-      </div>
-    `;
-
-    toggleSync("error");
-    return;
-  }
-
-  toggleSync("sync");
-
-  SHUFFLED_QUESTIONS =
-    [...filtered].sort(() => Math.random() - 0.5);
-
-  USER_ANSWERS = {};
-
-  CURRENT_PROGRESS_ID =
-    progressDocId(subject,MODE);
-
-  renderQuestions();
-
-  let restored = null;
-
-  try{
-
-    restored = await Promise.race([
-      loadProgress(subject,MODE),
-      new Promise(resolve =>
-        setTimeout(() => resolve(null),4000)
-      )
-    ]);
-
-  }catch(e){
-    console.warn("Progress restore skipped:",e);
-  }
-
-  if(restored && Array.isArray(restored.questionIds)
-     && restored.questionIds.length){
-
-    const map = new Map(
-      filtered.map(q => [questionKey(q),q])
-    );
-
-    const restoredQuestions =
-      restored.questionIds
-        .map(id => map.get(id))
-        .filter(Boolean);
-
-    if(restoredQuestions.length === filtered.length){
-      SHUFFLED_QUESTIONS = restoredQuestions;
-    }
-
-    USER_ANSWERS = restored.answers || {};
-
-    renderQuestions();
-    restoreAnswerVisuals();
-
-    if(restored.completed){
-
-      const score = calculateScore();
-      const wrongs = buildWrongAnswers();
-
-      showEvaluation(
-        score,
-        SHUFFLED_QUESTIONS.length,
-        Math.round(
-          (score / SHUFFLED_QUESTIONS.length) * 100
-        ),
-        wrongs
-      );
-
-      toggleSync("ok");
-      return;
-    }
-
-    showSaveMessage("تم استرجاع تقدمك السابق ✓");
-
-  }else{
-
-    showSaveMessage("بدأ اختبار جديد - الحفظ تلقائي");
-
-    saveProgress(false);
-  }
-
-  await trackUser(subject);
-
-  toggleSync("ok");
-}
-
-/* =========================================================
-   Render questions
-   ========================================================= */
-function renderQuestions(){
-
-  document.getElementById("active-sub-name").innerText =
-    CURRENT_SUBJECT;
-
-  document.getElementById("stats-area").classList.remove("hidden");
-  document.getElementById("evaluation-result").classList.add("hidden");
-  document.getElementById("content-area").classList.remove("hidden");
-
-  document.getElementById("rem-q").innerText =
-    Math.max(
-      0,
-      SHUFFLED_QUESTIONS.length -
-      Object.keys(USER_ANSWERS).length
-    );
-
-  document.getElementById("content-area").innerHTML =
-    SHUFFLED_QUESTIONS.map((q,i) => {
-
-      const correctVal =
-        String(q.correct ?? "").trim();
-
-      const opt1Val =
-        String(q.opt1 ?? "").trim();
-
-      const opt2Val =
-        String(q.opt2 ?? "").trim();
-
-      return `
-        <div class="q-stream-card">
-          <div class="q-number">سؤال رقم ${i+1}</div>
-
-          <h3>${escapeHtml(q.question)}</h3>
-
-          <div id="group-${i}">
-
-            <button type="button"
-              class="opt-btn"
-              data-value="${escapeAttr(opt1Val)}"
-              onclick="handleOptionClick(event,${i},${JSON.stringify(opt1Val)},${JSON.stringify(correctVal)})">
-
-              <span>${escapeHtml(opt1Val)}</span>
-              <span></span>
-            </button>
-
-            <button type="button"
-              class="opt-btn"
-              data-value="${escapeAttr(opt2Val)}"
-              onclick="handleOptionClick(event,${i},${JSON.stringify(opt2Val)},${JSON.stringify(correctVal)})">
-
-              <span>${escapeHtml(opt2Val)}</span>
-              <span></span>
-            </button>
-
-          </div>
-        </div>
-      `;
-
-    }).join("");
-
-  document.getElementById("action-footer").classList.remove("hidden");
-
-  document.getElementById("content-area")
-    .scrollIntoView({
-      behavior:"smooth",
-      block:"start"
-    });
-}
-
-/* =========================================================
-   Restore answer visuals
-   ========================================================= */
-function restoreAnswerVisuals(){
-
-  Object.keys(USER_ANSWERS).forEach(key => {
-
-    const idx = Number(key);
-    const ans = USER_ANSWERS[key] || {};
-
-    const group = document.getElementById(`group-${idx}`);
-    if(!group) return;
-
-    const selected = String(ans.selected ?? "").trim();
-    const correct = String(ans.correct ?? "").trim();
-
-    const buttons = [...group.querySelectorAll(".opt-btn")];
-
-    buttons.forEach(btn => {
-      btn.classList.remove("selected","correct","wrong");
-
-      const value = String(btn.dataset.value || "").trim();
-
-      if(MODE === "exam"){
-        if(value === selected){
-          btn.classList.add("selected");
-        }
-      }else{
-        if(value === correct){
-          btn.classList.add("correct");
-        }
-
-        if(value === selected && selected !== correct){
-          btn.classList.add("wrong");
-        }
-      }
-    });
-
-    if(MODE === "study"){
-      group.classList.add("locked");
-    }
-  });
-
-  document.getElementById("rem-q").innerText =
-    Math.max(
-      0,
-      SHUFFLED_QUESTIONS.length -
-      Object.keys(USER_ANSWERS).length
-    );
-}
-
-/* =========================================================
-   Answer click
-   ========================================================= */
-function handleOptionClick(ev,idx,val,correct){
-
-  const group = document.getElementById(`group-${idx}`);
-  if(!group) return;
-
-  // في وضع المذاكرة لا يمكن تغيير إجابة السؤال بعد حله.
-  if(MODE === "study" && group.classList.contains("locked"))
-    return;
-
-  const selected = String(val ?? "").trim();
-  const rightAnswer = String(correct ?? "").trim();
-
-  // تسجيل الإجابة فوراً، قبل أي حفظ أو تحديث للواجهة.
-  USER_ANSWERS[idx] = {
-    selected: selected,
-    correct: rightAnswer
-  };
-
-  const buttons = [...group.querySelectorAll(".opt-btn")];
-
-  if(MODE === "study"){
-
-    // إظهار الإجابة الصحيحة فور الضغط.
-    buttons.forEach(btn => {
-      const btnVal = String(btn.dataset.value || "").trim();
-
-      btn.classList.remove("selected","correct","wrong");
-
-      if(btnVal === rightAnswer){
-        btn.classList.add("correct");
-      }
-
-      if(btnVal === selected && selected !== rightAnswer){
-        btn.classList.add("wrong");
-      }
-    });
-
-    // قفل السؤال بعد الإجابة.
-    group.classList.add("locked");
-
-  }else{
-
-    // في وضع الاختبار: إظهار الاختيار فقط،
-    // والإجابة الصحيحة تظهر بعد اعتماد الاختبار.
-    buttons.forEach(btn => btn.classList.remove("selected"));
-
-    if(ev && ev.currentTarget){
-      ev.currentTarget.classList.add("selected");
-    }
-  }
-
-  // السؤال محسوب كمجاب فور الضغط.
-  document.getElementById("rem-q").innerText =
-    Math.max(
-      0,
-      SHUFFLED_QUESTIONS.length -
-      Object.keys(USER_ANSWERS).length
-    );
-
-  // الحفظ بدون إعادة رسم الأسئلة.
-  saveProgressDebounced();
-}
-
-/* =========================================================
-   Firestore persistence
-   ========================================================= */
-function progressDocId(subject,mode){
-
-  const raw =
-    `${auth.currentUser.uid}__${mode}__${subject}`;
-
-  return btoa(
-    unescape(encodeURIComponent(raw))
-  )
-  .replace(/\+/g,"-")
-  .replace(/\//g,"_")
-  .replace(/=+$/,"")
-  .substring(0,1500);
-}
-
-function questionKey(q){
-
-  const id =
-    String(q.id ?? "").trim();
-
-  if(id) return id;
-
-  return String(q.question ?? "").trim();
-}
-
-function progressCollection(){
-
-  return db
-    .collection("userProgress")
-    .doc(auth.currentUser.uid)
-    .collection("sessions");
-}
-
-async function saveProgress(completed=false,score=null){
-
-  if(
-    !auth.currentUser ||
-    !CURRENT_SUBJECT ||
-    !SHUFFLED_QUESTIONS.length
-  ){
-    return;
-  }
-
-  try{
-
-    const ref =
-      progressCollection()
-        .doc(progressDocId(CURRENT_SUBJECT,MODE));
-
-    const payload = {
-      uid:auth.currentUser.uid,
-      email:auth.currentUser.email || "",
-      subject:CURRENT_SUBJECT,
-      mode:MODE,
-      questionIds:
-        SHUFFLED_QUESTIONS.map(questionKey),
-      answers:USER_ANSWERS,
-      completed:!!completed,
-      score:score,
-      total:SHUFFLED_QUESTIONS.length,
-      updatedAt:
-        firebase.firestore.FieldValue.serverTimestamp()
-    };
-
-    await ref.set(payload,{merge:true});
-
-    showSaveMessage(
-      completed
-      ? "تم حفظ النتيجة ✓"
-      : "تم الحفظ تلقائياً ✓"
-    );
-
-  }catch(e){
-
-    console.error("Firestore save error",e);
-
-    showSaveMessage(
-      "تعذر الحفظ السحابي مؤقتاً"
-    );
-  }
-}
-
-function saveProgressDebounced(){
-  clearTimeout(SAVE_TIMER);
-
-  const subjectAtSchedule = CURRENT_SUBJECT;
-  const modeAtSchedule = MODE;
-
-  showSaveMessage("جاري حفظ الإجابة...");
-
-  SAVE_TIMER = setTimeout(() => {
-
-    // لا تحفظ إجابة قديمة بعد تغيير المادة أو الوضع.
-    if(
-      subjectAtSchedule !== CURRENT_SUBJECT ||
-      modeAtSchedule !== MODE
-    ){
-      return;
-    }
-
-    saveProgress(false);
-
-  },700);
-}
-
-async function loadProgress(subject,mode){
-
-  if(!auth.currentUser)
-    return null;
-
-  try{
-
-    const snap =
-      await progressCollection()
-        .doc(progressDocId(subject,mode))
-        .get();
-
-    if(snap.exists)
-      return snap.data();
-
-  }catch(e){
-
-    console.error("Firestore load error",e);
-
-    showSaveMessage(
-      "تعذر الوصول إلى الحفظ السحابي"
-    );
-  }
-
-  return null;
-}
-
-function showSaveMessage(text){
-
-  const el =
-    document.getElementById("save-status");
-
-  if(el)
-    el.innerText = text;
-}
-
-/* =========================================================
-   Final exam
-   ========================================================= */
-async function submitFinalExam(){
-
-  const total =
-    SHUFFLED_QUESTIONS.length;
-
-  const answeredCount =
-    Object.keys(USER_ANSWERS).length;
-
-  if(!total){
-
-    alert("اختر مادة أولاً.");
-    return;
-  }
-
-  if(answeredCount < total){
-
-    const remaining =
-      total - answeredCount;
-
-    alert(
-      `⚠️ تنبيه: يرجى الإجابة على كافة الأسئلة أولاً.\nمتبقي لك: ${remaining} سؤال.`
-    );
-
-    for(let i=0;i<total;i++){
-
-      if(!USER_ANSWERS[i]){
-
-        const group =
-          document.getElementById(`group-${i}`);
-
-        if(group)
-          group.parentElement.scrollIntoView({
-            behavior:"smooth",
-            block:"center"
-          });
-
-        break;
-      }
-    }
-
-    return;
-  }
-
-  const score = calculateScore();
-
-  const percent =
-    Math.round((score / total) * 100);
-
-  const wrongsHTML =
-    buildWrongAnswers();
-
-  await saveProgress(true,score);
-
-  showEvaluation(
-    score,
-    total,
-    percent,
-    wrongsHTML
-  );
-
-  document.getElementById("evaluation-result")
-    .scrollIntoView({
-      behavior:"smooth",
-      block:"start"
-    });
-}
-
-function calculateScore(){
-
-  let score = 0;
-
-  SHUFFLED_QUESTIONS.forEach((q,i) => {
-
-    const ans =
-      USER_ANSWERS[i];
-
-    if(
-      ans &&
-      String(ans.selected).trim() ===
-      String(q.correct).trim()
-    ){
-      score++;
-    }
-
-  });
-
-  return score;
-}
-
-function buildWrongAnswers(){
-
-  let html = "";
-
-  SHUFFLED_QUESTIONS.forEach((q,i) => {
-
-    const ans =
-      USER_ANSWERS[i];
-
-    if(
-      !ans ||
-      String(ans.selected).trim() !==
-      String(q.correct).trim()
-    ){
-
-      html += `
-        <div class="q-stream-card"
-             style="border-right:4px solid var(--danger)!important;background:rgba(239,68,68,.05)">
-
-          <div style="color:var(--danger);font-weight:bold;margin-bottom:10px">
-            <i class="fa-solid fa-circle-xmark"></i>
-            مراجعة الخطأ - سؤال رقم ${i+1}
-          </div>
-
-          <h3 style="margin:10px 0">
-            ${escapeHtml(q.question)}
-          </h3>
-
-          <div style="display:flex;gap:10px;flex-wrap:wrap">
-
-            <div class="pill"
-                 style="border-color:var(--danger);color:#fff;background:var(--danger)">
-              إجابتك:
-              ${ans
-                ? escapeHtml(ans.selected)
-                : "لم يتم الإجابة"}
-            </div>
-
-            <div class="pill"
-                 style="border-color:var(--success);color:#fff;background:var(--success)">
-              الإجابة الصحيحة:
-              ${escapeHtml(q.correct)}
-            </div>
-
-          </div>
-        </div>
-      `;
-    }
-
-  });
-
-  return html;
-}
-
-function showEvaluation(
-  score,
-  total,
-  percent,
-  wrongsHTML
-){
-
-  const evalArea =
-    document.getElementById("evaluation-result");
-
-  document.getElementById("content-area")
-    .classList.add("hidden");
-
-  document.getElementById("action-footer")
-    .classList.add("hidden");
-
-  document.getElementById("stats-area")
-    .classList.add("hidden");
-
-  evalArea.classList.remove("hidden");
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
-  let color;
-  let emoji;
-  let message;
-
-  if(percent >= 90){
-
-    color="#22c55e";
-    emoji="🥳 🎉 🏆";
-    message="أداء استثنائي! أنت مستعد تماماً";
-
-  }else if(percent >= 75){
-
-    color="#00f2ff";
-    emoji="👏 ✨";
-    message="عمل رائع! استمر في المراجعة";
-
-  }else if(percent >= 50){
-
-    color="#d4af37";
-    emoji="👍 📖";
-    message="نتيجة جيدة، لكن ركز أكثر";
-
-  }else{
-
-    color="#ef4444";
-    emoji="⚠️ ✍️";
-    message="تحتاج لإعادة المذاكرة، حاول مرة أخرى";
-  }
-
-  evalArea.innerHTML = `
-    <div class="eval-panel"
-         style="border-color:${color};background:linear-gradient(135deg,#020617,${color}22);margin-bottom:40px">
-
-      <div style="font-size:5rem;margin-bottom:10px">
-        ${emoji}
-      </div>
-
-      <h2 style="color:${color}">
-        التقييم النهائي
-      </h2>
-
-      <div style="font-size:5rem;font-weight:900;color:${color}">
-        ${percent}%
-      </div>
-
-      <h3 style="color:#fff;margin:15px 0">
-        ${message}
-      </h3>
-
-      <p style="font-size:1.2rem;opacity:.9">
-        أجبت على <b>${score}</b>
-        من أصل <b>${total}</b> سؤال
-      </p>
-
-      <button class="btn-main"
-              style="background:${color};max-width:320px"
-              onclick="restartCurrentExam()">
-
-        إعادة الاختبار
-        <i class="fa-solid fa-rotate-right"></i>
-
-      </button>
-
-    </div>
-
-    <div style="margin-top:50px">
-
-      ${
-        wrongsHTML
-        ? `
-          <h2 style="text-align:center;color:var(--danger);margin-bottom:25px">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            مراجعة الإجابات الخاطئة
-          </h2>
-          ${wrongsHTML}
-        `
-        : `
-          <div style="text-align:center;padding:40px;opacity:.7">
-            <i class="fa-solid fa-check-double fa-3x"
-               style="color:var(--success)"></i>
-            <h3>
-              ممتاز! حصلت على الدرجة النهائية، لا توجد أخطاء.
-            </h3>
-          </div>
-        `
-      }
-
-    </div>
-  `;
-}
-
-/* =========================================================
-   Restart
-   ========================================================= */
-async function restartCurrentExam(){
-
-  if(!CURRENT_SUBJECT)
-    return;
-
-  const filtered =
-    ALL_DATA.filter(q =>
-      String(q.subject ?? "").trim() ===
-      CURRENT_SUBJECT
-    );
-
-  SHUFFLED_QUESTIONS =
-    [...filtered].sort(() => Math.random() - 0.5);
-
-  USER_ANSWERS = {};
-
-  try{
-
-    await progressCollection()
-      .doc(progressDocId(CURRENT_SUBJECT,MODE))
-      .delete();
-
-  }catch(e){
-    console.log("Delete old progress:",e);
-  }
-
-  renderQuestions();
-
-  showSaveMessage("تم بدء محاولة جديدة");
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
-  await saveProgress(false);
-}
+getRedirectResult(auth).catch(error=>{
+    if(error) console.error("Redirect auth:", error);
+});
 
 /* =========================================================
    Helpers
    ========================================================= */
-function escapeHtml(value){
+function escapeHTML(value){
+    return String(value ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+function escapeAttr(value){ return escapeHTML(value); }
+function normalize(v){ return String(v ?? "").trim(); }
+function normalizeAnswer(v){ return normalize(v).replace(/\s+/g," "); }
+function sameAnswer(a,b){ return normalizeAnswer(a).localeCompare(normalizeAnswer(b),"ar",{sensitivity:"base"}) === 0; }
 
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+function normalizeQuestionRecord(q){
+    return {
+        question: normalize(q?.question),
+        opt1: normalize(q?.opt1 || q?.option1 || q?.options?.[0]),
+        opt2: normalize(q?.opt2 || q?.option2 || q?.options?.[1]),
+        correct: normalize(q?.correct || q?.answer || q?.correctAnswer || q?.rightAnswer),
+        subject: normalize(q?.subject || "عام")
+    };
 }
 
-function escapeAttr(value){
-  return escapeHtml(value);
+function showToast(message, type="normal"){
+    const el = document.getElementById("toast");
+    el.classList.remove("hidden");
+    el.style.borderColor =
+        type === "success" ? "var(--success)" :
+        type === "error" ? "var(--danger)" : "var(--scu-gold)";
+    el.innerHTML = message;
+    clearTimeout(window.toastTimer);
+    window.toastTimer = setTimeout(()=>el.classList.add("hidden"), 3500);
 }
+
+function toggleSync(state){
+    const led = document.getElementById("sync-led");
+    led.className = "sync-led";
+    if(state === "ok") led.classList.add("sync-green");
+    else if(state === "error") led.classList.add("sync-red");
+    else led.classList.add("sync-sync");
+}
+
+function updateSaveStatus(text){
+    const el = document.getElementById("save-status");
+    if(el) el.innerText = text;
+}
+
+/* =========================================================
+   Clock
+   ========================================================= */
+setInterval(()=>{
+    document.getElementById("clock").innerText =
+        new Date().toLocaleTimeString("ar-EG");
+},1000);
+
+/* =========================================================
+   Google Sheets: تحميل الأسئلة
+   ========================================================= */
+async function loadMainData(){
+    const res = await fetch(API_URL + "?nocache=" + Date.now());
+    if(!res.ok) throw new Error("تعذر تحميل الأسئلة");
+
+    const raw = await res.json();
+
+    ALL_DATA = Array.isArray(raw)
+        ? raw.map(normalizeQuestionRecord)
+             .filter(q => q.question !== "" && q.opt1 !== "" && q.opt2 !== "")
+        : (raw && Array.isArray(raw.data)
+            ? raw.data.map(normalizeQuestionRecord)
+                   .filter(q => q.question !== "" && q.opt1 !== "" && q.opt2 !== "")
+            : []);
+
+    refreshSubjects();
+}
+
+function refreshSubjects(){
+    const subs = [...new Set(ALL_DATA.map(q=>String(q.subject || "عام").trim()))]
+        .filter(Boolean);
+
+    const container = document.getElementById("subject-links");
+
+    if(!subs.length){
+        container.innerHTML = '<div style="text-align:center;padding:10px;opacity:.5">لا توجد مواد</div>';
+        return;
+    }
+
+    container.innerHTML = subs.map(s=>`
+        <div class="nav-link sub-item"
+             data-subject="${escapeAttr(s)}"
+             onclick="startContent(${JSON.stringify(s)},event)">
+            <i class="fa-solid fa-hand-point-left moving-hand"></i>
+            <i class="fa-solid fa-chevron-left"></i>
+            ${escapeHTML(s)}
+        </div>
+    `).join("");
+}
+
+/* =========================================================
+   عدادات Google Sheets
+   ========================================================= */
+async function updateVisitorDisplay(){
+    try{
+        const res = await fetch(API_URL + "?action=getStats&nocache=" + Date.now());
+        const result = await res.json();
+
+        if(result.status === "ok"){
+            document.getElementById("user-count").innerText =
+                result.data?.users ?? 0;
+            document.getElementById("attempt-count").innerText =
+                result.data?.attempts ?? 0;
+        }
+    }catch(e){
+        console.log("Stats fetch error");
+    }
+}
+
+/* =========================================================
+   سجل الزيارة - تم الإبقاء عليه من الكود الأصلي
+   ========================================================= */
+async function trackUser(subject){
+    if(!CURRENT_USER?.email) return;
+
+    try{
+        const email = String(CURRENT_USER.email).trim().toLowerCase();
+        const res = await fetch(API_URL,{
+            method:"POST",
+            body:JSON.stringify({
+                action:"trackVisit",
+                subject,
+                userName:email,
+                googleEmail:email,
+                firebaseUid:CURRENT_USER.uid || "",
+                displayName:CURRENT_USER.displayName || ""
+            })
+        });
+
+        const result = await res.json();
+        if(result.status === "success"){
+            document.getElementById("user-count").innerText =
+                result.data?.users ?? document.getElementById("user-count").innerText;
+            document.getElementById("attempt-count").innerText =
+                result.data?.attempts ?? document.getElementById("attempt-count").innerText;
+        }
+    }catch(e){
+        console.log("Email tracking skipped",e);
+    }
+}
+
+/* =========================================================
+   Firestore: حفظ واسترجاع التقدم
+   المسار:
+   userProgress/{uid}/current
+   ========================================================= */
+function progressRef(){
+    if(!CURRENT_USER) return null;
+    return doc(
+        db,
+        PROGRESS_COLLECTION,
+        CURRENT_USER.uid,
+        "sessions",
+        CURRENT_PROGRESS_ID
+    );
+}
+
+function serializeQuestion(q){
+    const n = normalizeQuestionRecord(q);
+    return {
+        question:n.question,
+        opt1:n.opt1,
+        opt2:n.opt2,
+        correct:n.correct,
+        subject:n.subject
+    };
+}
+
+function serializeQuestions(list){
+    return list.map(serializeQuestion);
+}
+
+async function saveProgressNow(force=false){
+    if(!CURRENT_USER || !CURRENT_SUBJECT || !SHUFFLED_QUESTIONS.length) return;
+
+    const answers = {};
+    Object.keys(USER_ANSWERS).forEach(k=>{
+        answers[k] = {
+            selected: String(USER_ANSWERS[k].selected ?? ""),
+            correct: String(USER_ANSWERS[k].correct ?? "")
+        };
+    });
+
+    const payload = {
+        uid: CURRENT_USER.uid,
+        email: CURRENT_USER.email || "",
+        subject: CURRENT_SUBJECT,
+        mode: MODE,
+        answers,
+        questions: serializeQuestions(SHUFFLED_QUESTIONS),
+        answeredCount: Object.keys(answers).length,
+        total: SHUFFLED_QUESTIONS.length,
+        updatedAt: Date.now(),
+        status: "in_progress"
+    };
+
+    try{
+        updateSaveStatus("جارٍ الحفظ...");
+        await setDoc(progressRef(), payload, {merge:true});
+        updateSaveStatus("تم الحفظ ✓");
+    }catch(error){
+        console.error("Firestore save:",error);
+        updateSaveStatus("تعذر الحفظ");
+        toggleSync("error");
+    }
+}
+
+function scheduleSaveProgress(){
+    clearTimeout(saveTimer);
+    updateSaveStatus("حفظ تلقائي...");
+    saveTimer = setTimeout(()=>saveProgressNow(),350);
+}
+
+async function loadSavedProgress(){
+    if(!CURRENT_USER) return null;
+
+    try{
+        const snap = await getDoc(progressRef());
+        return snap.exists() ? snap.data() : null;
+    }catch(error){
+        console.error("Firestore load:",error);
+        return null;
+    }
+}
+
+async function clearSavedProgress(){
+    if(!CURRENT_USER) return;
+
+    try{
+        await deleteDoc(progressRef());
+    }catch(error){
+        console.error("Firestore delete:",error);
+    }
+}
+
+function hasUsableProgress(data){
+    return !!(
+        data &&
+        data.status === "in_progress" &&
+        data.subject &&
+        Array.isArray(data.questions) &&
+        data.questions.length > 0
+    );
+}
+
+async function maybeOfferResume(){
+    if(resumeOfferShown) return;
+    resumeOfferShown = true;
+
+    const saved = await loadSavedProgress();
+
+    if(!hasUsableProgress(saved)) return;
+
+    const answered = Number(saved.answeredCount || Object.keys(saved.answers || {}).length || 0);
+    const total = Number(saved.total || saved.questions.length || 0);
+
+    const choice = confirm(
+        `لديك اختبار غير مكتمل.\n\n` +
+        `المادة: ${saved.subject}\n` +
+        `أجبت على: ${answered} من ${total}\n\n` +
+        `اضغط "موافق" لاستكماله من نفس المكان.\n` +
+        `اضغط "إلغاء" لبدء اختبار جديد.`
+    );
+
+    if(choice){
+        resumeSavedProgress(saved);
+    }else{
+        await clearSavedProgress();
+        showToast("تم إلغاء الجلسة السابقة. يمكنك بدء اختبار جديد.", "success");
+    }
+}
+
+function resumeSavedProgress(saved){
+    MODE = saved.mode === "study" ? "study" : "exam";
+    CURRENT_SUBJECT = saved.subject;
+
+    SHUFFLED_QUESTIONS = (saved.questions || []).map(serializeQuestion);
+
+    USER_ANSWERS = {};
+    Object.entries(saved.answers || {}).forEach(([idx,ans])=>{
+        USER_ANSWERS[idx] = {
+            selected:String(ans.selected ?? ""),
+            correct:String(ans.correct ?? "")
+        };
+    });
+
+    document.getElementById("btn-exam").classList.toggle("active",MODE==="exam");
+    document.getElementById("btn-study").classList.toggle("active",MODE==="study");
+
+    renderQuestions(CURRENT_SUBJECT, true);
+
+    showToast(
+        `<i class="fa-solid fa-cloud-arrow-down"></i> تم استرجاع تقدمك: ${Object.keys(USER_ANSWERS).length} سؤال`,
+        "success"
+    );
+}
+
+/* =========================================================
+   تغيير وضع الاختبار
+   ========================================================= */
+window.switchMode = function(type,ev){
+    MODE = type;
+
+    document.querySelectorAll(".nav-link").forEach(l=>l.classList.remove("active"));
+    if(ev?.currentTarget) ev.currentTarget.classList.add("active");
+
+    document.getElementById("content-area").innerHTML =
+        `<div style="text-align:center;padding-top:100px;opacity:.6">
+            <h3>تم تغيير الوضع إلى (${MODE==="exam"?"الاختبار":"المذاكرة"}). اختر المادة مرة أخرى.</h3>
+        </div>`;
+
+    document.getElementById("action-footer").classList.add("hidden");
+    document.getElementById("stats-area").classList.add("hidden");
+    document.getElementById("evaluation-result").classList.add("hidden");
+    document.getElementById("sidebar-main").classList.add("flash-alert");
+
+    CURRENT_SUBJECT = null;
+    SHUFFLED_QUESTIONS = [];
+    USER_ANSWERS = {};
+};
+
+/* =========================================================
+   بدء المادة
+   ========================================================= */
+window.startContent = async function(sub,ev){
+    if(!CURRENT_USER){
+        alert("يرجى تسجيل الدخول بحساب Google أولاً.");
+        return;
+    }
+
+    /* لو فيه جلسة مختلفة محفوظة، لا نسمح بالكتابة فوقها بدون تأكيد */
+    const saved = await loadSavedProgress();
+    if(
+        hasUsableProgress(saved) &&
+        saved.subject &&
+        saved.subject !== sub &&
+        Object.keys(saved.answers || {}).length > 0
+    ){
+        const continueSaved = confirm(
+            `يوجد اختبار غير مكتمل في مادة "${saved.subject}".\n\n` +
+            `هل تريد استكماله أولاً؟\n\n` +
+            `موافق = استكمال الاختبار السابق\n` +
+            `إلغاء = بدء مادة "${sub}" جديدة`
+        );
+
+        if(continueSaved){
+            resumeSavedProgress(saved);
+            return;
+        }
+
+        await clearSavedProgress();
+    }
+
+    await trackUser(sub);
+
+    document.getElementById("sidebar-main").classList.remove("flash-alert");
+
+    document.querySelectorAll(".sub-item").forEach(el=>el.classList.remove("active"));
+    if(ev?.currentTarget) ev.currentTarget.classList.add("active");
+
+    const filtered = ALL_DATA.filter(q=>String(q.subject || "").trim() === String(sub).trim());
+
+    SHUFFLED_QUESTIONS = [...filtered].sort(()=>Math.random()-.5);
+    USER_ANSWERS = {};
+    CURRENT_SUBJECT = sub;
+
+    renderQuestions(sub,false);
+
+    /* يبدأ حفظ الجلسة بمجرد فتح المادة */
+    await saveProgressNow();
+};
+
+function renderQuestions(sub,isResume=false){
+    document.getElementById("active-sub-name").innerText = sub;
+    document.getElementById("stats-area").classList.remove("hidden");
+    document.getElementById("evaluation-result").classList.add("hidden");
+    document.getElementById("content-area").classList.remove("hidden");
+
+    const answeredCount = Object.keys(USER_ANSWERS).length;
+    document.getElementById("rem-q").innerText =
+        Math.max(0, SHUFFLED_QUESTIONS.length - answeredCount);
+
+    if(!SHUFFLED_QUESTIONS.length){
+        document.getElementById("content-area").innerHTML =
+            `<div class="q-stream-card"><h3>لا توجد أسئلة لهذه المادة.</h3></div>`;
+        document.getElementById("action-footer").classList.add("hidden");
+        return;
+    }
+
+    document.getElementById("content-area").innerHTML = SHUFFLED_QUESTIONS.map((rawQ,i)=>{
+        const q = normalizeQuestionRecord(rawQ);
+        SHUFFLED_QUESTIONS[i] = q;
+        const saved = USER_ANSWERS[i];
+        const selected = saved?.selected || "";
+        const hasAnswer = !!saved && selected !== "";
+        const selectedIsCorrect = hasAnswer && sameAnswer(selected,q.correct);
+
+        return `
+        <div class="q-stream-card" id="question-card-${i}">
+            <div style="font-size:.8rem;color:var(--scu-gold);margin-bottom:10px">سؤال رقم ${i+1}</div>
+            <h3 style="margin:0 0 20px 0;line-height:1.7">${escapeHTML(q.question)}</h3>
+
+            <div id="group-${i}" class="answer-group ${hasAnswer && MODE==="study" ? "locked" : ""}">
+                <div class="opt-btn ${MODE==="exam" && sameAnswer(selected,q.opt1) ? "selected":""} ${MODE==="study" && hasAnswer ? (sameAnswer(q.opt1,q.correct)?"correct":(!selectedIsCorrect && sameAnswer(selected,q.opt1)?"wrong":"")):""}"
+                     data-answer="${escapeAttr(q.opt1)}"
+                     onclick="handleOptionClick(event,${i},${JSON.stringify(q.opt1)},${JSON.stringify(q.correct)})">
+                    <span>${escapeHTML(q.opt1)}</span><span class="answer-mark"></span>
+                </div>
+
+                <div class="opt-btn ${MODE==="exam" && sameAnswer(selected,q.opt2) ? "selected":""} ${MODE==="study" && hasAnswer ? (sameAnswer(q.opt2,q.correct)?"correct":(!selectedIsCorrect && sameAnswer(selected,q.opt2)?"wrong":"")):""}"
+                     data-answer="${escapeAttr(q.opt2)}"
+                     onclick="handleOptionClick(event,${i},${JSON.stringify(q.opt2)},${JSON.stringify(q.correct)})">
+                    <span>${escapeHTML(q.opt2)}</span><span class="answer-mark"></span>
+                </div>
+            </div>
+
+            ${MODE==="study" && hasAnswer ? `
+                <div class="instant-feedback ${selectedIsCorrect ? "feedback-correct":"feedback-wrong"}">
+                    <i class="fa-solid ${selectedIsCorrect ? "fa-circle-check":"fa-circle-xmark"}"></i>
+                    ${selectedIsCorrect ? "إجابتك صحيحة" : `إجابتك غير صحيحة — الإجابة الصحيحة: <b>${escapeHTML(q.correct)}</b>`}
+                </div>` : ""}
+        </div>`;
+    }).join("");
+
+    document.getElementById("action-footer").classList.remove("hidden");
+
+    if(isResume){
+        const firstUnanswered=SHUFFLED_QUESTIONS.findIndex((_,i)=>!USER_ANSWERS[i]);
+        const target=firstUnanswered>=0?firstUnanswered:0;
+        setTimeout(()=>document.getElementById(`question-card-${target}`)?.scrollIntoView({behavior:"smooth",block:"center"}),250);
+    }else{
+        document.getElementById("content-area").scrollIntoView({behavior:"smooth",block:"start"});
+    }
+}
+
+/* =========================================================
+   اختيار الإجابة
+   ========================================================= */
+window.handleOptionClick = function(ev,idx,val,correct){
+    const group=document.getElementById(`group-${idx}`);
+    if(!group || group.classList.contains("locked")) return;
+
+    const q=normalizeQuestionRecord(SHUFFLED_QUESTIONS[idx]);
+    const selected=normalize(val);
+    const right=normalize(correct || q.correct);
+
+    // تسجيل الإجابة أولاً حتى لا تضيع عند الانتقال للسؤال التالي.
+    USER_ANSWERS[idx]={
+        selected,
+        correct:right,
+        answeredAt:Date.now()
+    };
+
+    const buttons=group.querySelectorAll(".opt-btn");
+    buttons.forEach(btn=>{
+        btn.classList.remove("selected","correct","wrong");
+        const btnAnswer=btn.dataset.answer || btn.innerText.trim();
+
+        if(MODE==="exam" && sameAnswer(btnAnswer,selected)) btn.classList.add("selected");
+
+        if(MODE==="study"){
+            if(sameAnswer(btnAnswer,right)) btn.classList.add("correct");
+            if(sameAnswer(btnAnswer,selected) && !sameAnswer(selected,right)) btn.classList.add("wrong");
+        }
+    });
+
+    if(MODE==="study"){
+        group.classList.add("locked");
+        const card=document.getElementById(`question-card-${idx}`);
+        card?.querySelectorAll(".instant-feedback").forEach(el=>el.remove());
+        const feedback=document.createElement("div");
+        const ok=sameAnswer(selected,right);
+        feedback.className=`instant-feedback ${ok ? "feedback-correct":"feedback-wrong"}`;
+        feedback.innerHTML=ok
+            ? '<i class="fa-solid fa-circle-check"></i> إجابتك صحيحة'
+            : `<i class="fa-solid fa-circle-xmark"></i> إجابتك غير صحيحة — الإجابة الصحيحة: <b>${escapeHTML(right)}</b>`;
+        card?.appendChild(feedback);
+    }
+
+    const answered=Object.keys(USER_ANSWERS).length;
+    document.getElementById("rem-q").innerText=Math.max(0,SHUFFLED_QUESTIONS.length-answered);
+    updateSaveStatus("حفظ الإجابة...");
+
+    // حفظ فوري + حماية إضافية بالـdebounce.
+    saveProgressNow(true).catch(()=>{});
+    scheduleSaveProgress();
+};
+
+/* =========================================================
+   اعتماد النتيجة
+   ========================================================= */
+window.submitFinalExam = async function(){
+    const total=SHUFFLED_QUESTIONS.length;
+    const answeredCount=Object.keys(USER_ANSWERS).length;
+
+    if(answeredCount<total){
+        const remaining=total-answeredCount;
+        alert(`⚠️ تنبيه: يرجى الإجابة على كافة الأسئلة أولاً.\nمتبقي لك: ${remaining} سؤال.`);
+
+        for(let i=0;i<total;i++){
+            if(!USER_ANSWERS[i]){
+                document.getElementById(`question-card-${i}`)?.scrollIntoView({
+                    behavior:"smooth",block:"center"
+                });
+                break;
+            }
+        }
+        return;
+    }
+
+    await saveProgressNow();
+
+    let score=0;
+    let wrongsHTML="";
+
+    SHUFFLED_QUESTIONS.forEach((q,i)=>{
+        const ans=USER_ANSWERS[i];
+
+        if(ans && sameAnswer(ans.selected,q.correct)){
+            score++;
+        }else{
+            wrongsHTML+=`
+            <div class="q-stream-card" style="border-right:4px solid var(--danger);background:rgba(239,68,68,.05)">
+                <div style="color:var(--danger);font-weight:bold;margin-bottom:10px">
+                    <i class="fa-solid fa-circle-xmark"></i> مراجعة الخطأ - سؤال رقم ${i+1}
+                </div>
+                <h3 style="margin:10px 0">${escapeHTML(q.question)}</h3>
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                    <div class="pill" style="border-color:var(--danger);color:#fff;background:var(--danger)">
+                        إجابتك: ${escapeHTML(ans?.selected || "لم يتم الإجابة")}
+                    </div>
+                    <div class="pill" style="border-color:var(--success);color:#fff;background:var(--success)">
+                        الإجابة الصحيحة: ${escapeHTML(q.correct)}
+                    </div>
+                </div>
+            </div>`;
+        }
+    });
+
+    const percent=total ? Math.round((score/total)*100) : 0;
+
+    await saveCompletedResult(score,total,percent);
+
+    showEvaluation(score,total,percent,wrongsHTML);
+
+    document.getElementById("evaluation-result").scrollIntoView({
+        behavior:"smooth",block:"start"
+    });
+};
+
+async function saveCompletedResult(score,total,percent){
+    if(!CURRENT_USER || !CURRENT_SUBJECT) return;
+
+    try{
+        await setDoc(progressRef(),{
+            status:"completed",
+            completedAt:Date.now(),
+            score,
+            total,
+            percent,
+            subject:CURRENT_SUBJECT,
+            mode:MODE,
+            answers:USER_ANSWERS,
+            questions:serializeQuestions(SHUFFLED_QUESTIONS),
+            email:CURRENT_USER.email || "",
+            uid:CURRENT_USER.uid || "",
+            userName:CURRENT_USER.displayName || ""
+        },{merge:true});
+
+        updateSaveStatus("تم حفظ النتيجة ✓");
+    }catch(error){
+        console.error(error);
+    }
+}
+
+function showEvaluation(score,total,percent,wrongsHTML){
+    const evalArea=document.getElementById("evaluation-result");
+    const contentArea=document.getElementById("content-area");
+    const actionFooter=document.getElementById("action-footer");
+    const statsArea=document.getElementById("stats-area");
+
+    contentArea.classList.add("hidden");
+    actionFooter.classList.add("hidden");
+    statsArea.classList.add("hidden");
+    evalArea.classList.remove("hidden");
+
+    window.scrollTo({top:0,behavior:"smooth"});
+
+    let color,emoji,message;
+
+    if(percent>=90){
+        color="#22c55e";emoji="🥳 🎉 🏆";message="أداء استثنائي! أنت مستعد تماماً";
+    }else if(percent>=75){
+        color="#00f2ff";emoji="👏 ✨";message="عمل رائع! استمر في المراجعة";
+    }else if(percent>=50){
+        color="#d4af37";emoji="👍 📖";message="نتيجة جيدة، لكن ركز أكثر";
+    }else{
+        color="#ef4444";emoji="⚠️ ✍️";message="تحتاج لإعادة المذاكرة، حاول مرة أخرى";
+    }
+
+    evalArea.innerHTML=`
+    <div class="eval-panel" style="border-color:${color};background:linear-gradient(135deg,#020617,${color}22);margin-bottom:40px">
+        <div style="font-size:5rem;margin-bottom:10px">${emoji}</div>
+        <h2 style="color:${color}">التقييم النهائي</h2>
+        <div style="font-size:5rem;font-weight:900;color:${color};text-shadow:0 0 20px ${color}55">${percent}%</div>
+        <h3 style="color:#fff;margin:15px 0">${message}</h3>
+        <p style="font-size:1.2rem;opacity:.9">أجبت على <b>${score}</b> من أصل <b>${total}</b> سؤال</p>
+        <button class="btn-main" style="background:${color};max-width:300px" onclick="startNewAttempt()">
+            إعادة الاختبار <i class="fa-solid fa-rotate-right"></i>
+        </button>
+    </div>
+
+    <div style="margin-top:50px">
+        ${wrongsHTML!=="" ? `
+            <h2 style="text-align:center;color:var(--danger);margin-bottom:25px">
+                <i class="fa-solid fa-magnifying-glass"></i> مراجعة الإجابات الخاطئة
+            </h2>
+            ${wrongsHTML}
+        ` : `
+            <div style="text-align:center;padding:40px;opacity:.5">
+                <i class="fa-solid fa-check-double fa-3x" style="color:var(--success)"></i>
+                <h3>ممتاز! حصلت على الدرجة النهائية، لا توجد أخطاء.</h3>
+            </div>
+        `}
+    </div>`;
+}
+
+window.startNewAttempt = async function(){
+    await clearSavedProgress();
+    location.reload();
+};
+
+/* =========================================================
+   لوحة الإدارة
+   ========================================================= */
+window.loadAdmin = async function(){
+    if(!isAdmin()){
+        alert("غير مصرح لك بالدخول إلى لوحة التحكم.");
+        return;
+    }
+
+    document.getElementById("content-area").innerHTML =
+        "<h3 style='text-align:center'>جاري فتح لوحة التحكم وسجل المستخدمين...</h3>";
+
+    try{
+        const resQ=await fetch(API_URL+"?nocache="+Date.now());
+        ADMIN_DATA=await resQ.json();
+
+        const resIP=await fetch(API_URL+"?action=getIPLogs&nocache="+Date.now());
+        const ipLogs=await resIP.json();
+
+        renderAdminDashboard(ipLogs?.data || []);
+    }catch(e){
+        console.error(e);
+        alert("فشل في جلب البيانات");
+    }
+};
+
+function renderAdminDashboard(logs){
+    window.allLogs=logs||[];
+
+    const adminHtml=`
+    <style>
+        .admin-tabs-nav{display:flex;background:rgba(0,0,0,.3);border-radius:15px;padding:5px;margin-bottom:25px;border:1px solid rgba(255,255,255,.05)}
+        .admin-tab-btn{flex:1;padding:12px;border:none;background:transparent;color:#888;cursor:pointer;transition:.4s;font-weight:bold;font-size:.9rem;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:8px}
+        .admin-tab-btn.active{background:var(--scu-gold);color:#000;box-shadow:0 4px 15px rgba(212,175,55,.3)}
+        .tab-panel{display:none;animation:slideUp .4s ease-out}.tab-panel.active{display:block}
+    </style>
+
+    <div class="admin-box" style="max-width:900px;margin:0 auto;background:var(--glass);border:2px solid var(--scu-gold);border-radius:25px;padding:clamp(15px,5vw,30px);box-shadow:0 25px 50px rgba(0,0,0,.6)">
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;padding-bottom:15px;border-bottom:1px solid rgba(212,175,55,.2)">
+            <button class="btn-main" onclick="location.reload()" style="margin:0;width:auto;padding:8px 18px;background:var(--danger);font-size:.85rem;border-radius:10px">
+                <i class="fa-solid fa-power-off"></i> خروج
+            </button>
+            <h2 style="margin:0;color:var(--scu-gold);font-size:1.4rem;font-weight:900">
+                <i class="fa-solid fa-shield-halved"></i> الإدارة المركزية
+            </h2>
+        </div>
+
+        <div class="admin-tabs-nav">
+            <button class="admin-tab-btn active" onclick="switchAdminTab(event,'panel-logs')">
+                <i class="fa-solid fa-tower-broadcast"></i> المراقبة الحية
+            </button>
+            <button class="admin-tab-btn" onclick="switchAdminTab(event,'panel-questions')">
+                <i class="fa-solid fa-database"></i> إدارة الأسئلة
+            </button>
+        </div>
+
+        <div id="panel-logs" class="tab-panel active">
+            <div style="background:rgba(15,23,42,.6);padding:15px;border-radius:20px;border:1px solid rgba(0,242,255,.2)">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px">
+                    <input type="text" id="filter-email" placeholder="بحث بالبريد الإلكتروني..." onkeyup="filterLogs()" style="margin:0;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1)">
+                    <input type="text" id="filter-sub" placeholder="بحث بالمادة..." onkeyup="filterLogs()" style="margin:0;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1)">
+                </div>
+
+                <div class="custom-scroll" style="max-height:400px;overflow:auto;border-radius:12px">
+                    <table style="width:100%;text-align:right;border-collapse:collapse;min-width:700px">
+                        <thead style="position:sticky;top:0;background:#0f172a;z-index:10">
+                            <tr style="color:var(--scu-gold);border-bottom:2px solid var(--scu-gold);font-size:.85rem">
+                                <th style="padding:15px">التوقيت</th>
+                                <th>البريد الإلكتروني</th>
+                                <th>المادة</th>
+                                <th>Google</th>
+                                <th style="text-align:center">الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logs-body">${generateLogRows(window.allLogs)}</tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="panel-questions" class="tab-panel">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:20px">
+                <button class="btn-main" style="background:var(--success);color:#000;margin:0;font-weight:900" onclick="resetForm();scrollToForm()">
+                    <i class="fa-solid fa-plus-circle"></i> إضافة سؤال
+                </button>
+                <button class="btn-main" style="background:var(--danger);color:#fff;margin:0;font-weight:900" onclick="deleteSelected()">
+                    <i class="fa-solid fa-trash-can"></i> حذف المختار
+                </button>
+            </div>
+
+            <div id="admin-questions-list" class="custom-scroll" style="height:350px;overflow-y:auto;background:rgba(0,0,0,.2);padding:15px;border-radius:20px;border:1px inset rgba(212,175,55,.1);margin-bottom:25px">
+                ${generateQuestionsHtml()}
+            </div>
+
+            <div id="edit-form" style="background:linear-gradient(145deg,rgba(15,23,42,.9),rgba(10,15,29,1));padding:25px;border-radius:22px;border:1px solid var(--scu-gold);position:relative">
+                <h4 id="form-title" style="margin:0 0 20px;color:var(--scu-gold);text-align:center;border-bottom:1px solid rgba(212,175,55,.2);padding-bottom:10px">إدخال / تعديل البيانات</h4>
+
+                <input type="hidden" id="edit-index" value="-1">
+
+                <textarea id="adm-q" rows="2" style="width:100%;background:rgba(0,0,0,.5);color:#fff;border:1px solid #444;border-radius:12px;padding:15px;margin-bottom:15px;font-family:inherit" placeholder="اكتب نص السؤال هنا..."></textarea>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+                    <input id="adm-o1" style="margin:0;background:rgba(0,0,0,.3)" placeholder="الخيار الأول">
+                    <input id="adm-o2" style="margin:0;background:rgba(0,0,0,.3)" placeholder="الخيار الثاني">
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+                    <input id="adm-c" style="margin:0;border-color:var(--success);background:rgba(0,0,0,.3)" placeholder="الإجابة الصحيحة">
+                    <input id="adm-sub" style="margin:0;border-color:var(--neon-cyan);background:rgba(0,0,0,.3)" placeholder="اسم المادة">
+                </div>
+
+                <button class="btn-main" onclick="processSave()" style="margin:0;width:100%;background:linear-gradient(90deg,var(--scu-gold),#b8860b);color:#000;font-weight:900;height:50px">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> تحديث السحابة فوراً
+                </button>
+            </div>
+        </div>
+    </div>`;
+
+    document.getElementById("content-area").innerHTML=adminHtml;
+    document.getElementById("stats-area").classList.add("hidden");
+    document.getElementById("action-footer").classList.add("hidden");
+    document.getElementById("evaluation-result").classList.add("hidden");
+    document.getElementById("content-area").scrollIntoView({behavior:"smooth"});
+}
+
+window.switchAdminTab=function(event,panelId){
+    document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));
+    document.querySelectorAll(".admin-tab-btn").forEach(b=>b.classList.remove("active"));
+    document.getElementById(panelId).classList.add("active");
+    event.currentTarget.classList.add("active");
+};
+
+function generateLogRows(data){
+    if(!data || !data.length)
+        return '<tr><td colspan="5" style="text-align:center;padding:30px;color:#666">لا توجد سجلات حالياً</td></tr>';
+
+    return data.map(log=>`
+        <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+            <td style="padding:12px;color:#aaa;font-size:.8rem">
+                ${log.time ? new Date(log.time).toLocaleTimeString("ar-EG") : "-"}
+            </td>
+            <td style="direction:ltr;text-align:left;color:var(--neon-cyan);font-family:monospace">
+                ${escapeHTML(log.googleEmail || log.email || log.userName || "-")}
+            </td>
+            <td style="color:#eee">${escapeHTML(log.subject || "عام")}</td>
+            <td style="direction:ltr;text-align:left;font-size:.75rem;color:#aaa">
+                ${escapeHTML(log.googleEmail || "-")}
+            </td>
+            <td style="text-align:center">
+                <span style="color:${log.type==="New"?"var(--success)":"var(--scu-gold)"};border:1px solid;padding:2px 8px;border-radius:5px;font-size:.7rem">
+                    ${log.type==="New"?"جديد":"متكرر"}
+                </span>
+            </td>
+        </tr>
+    `).join("");
+}
+
+function generateQuestionsHtml(){
+    if(!ADMIN_DATA.length)
+        return '<p style="text-align:center;padding:50px;color:#666">قائمة الأسئلة فارغة</p>';
+
+    return ADMIN_DATA.map((q,i)=>`
+        <div class="q-stream-card admin-card" data-index="${i}"
+             onclick="this.classList.toggle('selected-card')"
+             style="padding:15px;margin-bottom:12px;border:1px solid rgba(255,255,255,.1);cursor:pointer;border-radius:15px;background:rgba(255,255,255,.02)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                <span style="font-size:.7rem;background:rgba(212,175,55,.1);color:var(--scu-gold);padding:4px 10px;border-radius:8px;border:1px solid rgba(212,175,55,.2)">
+                    <i class="fa-solid fa-tag"></i> ${escapeHTML(q.subject || "")}
+                </span>
+                <button onclick="handleEditAction(${i},event)"
+                        style="background:var(--scu-gold);color:#000;border:none;border-radius:8px;padding:5px 15px;cursor:pointer;font-weight:bold;font-size:.75rem">
+                    تعديل
+                </button>
+            </div>
+            <p style="margin:0;font-size:.95rem;line-height:1.6;color:#eee;text-align:right">
+                ${escapeHTML(q.question || "")}
+            </p>
+        </div>
+    `).join("");
+}
+
+window.handleEditAction=function(index,event){
+    event?.stopPropagation();
+    editQuestion(index);
+    scrollToForm();
+};
+
+window.scrollToForm=function(){
+    document.getElementById("edit-form")?.scrollIntoView({behavior:"smooth",block:"center"});
+    const form=document.getElementById("edit-form");
+    if(form){
+        form.style.boxShadow="0 0 30px var(--scu-gold)";
+        setTimeout(()=>form.style.boxShadow="none",1500);
+    }
+};
+
+window.filterLogs=function(){
+    const emailVal=(document.getElementById("filter-email")?.value || "").toLowerCase().trim();
+    const subVal=(document.getElementById("filter-sub")?.value || "").toLowerCase().trim();
+
+    const filtered=window.allLogs.filter(log=>{
+        const email=String(log.googleEmail || log.email || log.userName || "").toLowerCase();
+        const subject=String(log.subject || "").toLowerCase();
+        return email.includes(emailVal) && subject.includes(subVal);
+    });
+
+    const body=document.getElementById("logs-body");
+    if(body) body.innerHTML=generateLogRows(filtered);
+};
+
+function editQuestion(index){
+    const q=ADMIN_DATA[index];
+    if(!q) return;
+
+    EDIT_INDEX=index;
+
+    document.getElementById("edit-index").value=index;
+    document.getElementById("adm-q").value=q.question || "";
+    document.getElementById("adm-o1").value=q.opt1 || q.option1 || q.options?.[0] || "";
+    document.getElementById("adm-o2").value=q.opt2 || q.option2 || q.options?.[1] || "";
+    document.getElementById("adm-c").value=q.correct || q.answer || q.correctAnswer || "";
+    document.getElementById("adm-sub").value=q.subject || "";
+
+    document.getElementById("form-title").innerText="تعديل السؤال الحالي";
+    document.getElementById("form-title").style.color="var(--neon-cyan)";
+}
+
+window.resetForm=function(){
+    EDIT_INDEX=null;
+
+    document.getElementById("edit-index").value="-1";
+    document.getElementById("adm-q").value="";
+    document.getElementById("adm-o1").value="";
+    document.getElementById("adm-o2").value="";
+    document.getElementById("adm-c").value="";
+    document.getElementById("adm-sub").value="";
+
+    document.getElementById("form-title").innerText="إضافة سؤال جديد";
+    document.getElementById("form-title").style.color="var(--scu-gold)";
+};
+
+window.processSave=function(){
+    const idx=parseInt(document.getElementById("edit-index").value,10);
+
+    const newData={
+        question:document.getElementById("adm-q").value.trim(),
+        opt1:document.getElementById("adm-o1").value.trim(),
+        opt2:document.getElementById("adm-o2").value.trim(),
+        correct:document.getElementById("adm-c").value.trim(),
+        subject:document.getElementById("adm-sub").value.trim()
+    };
+
+    if(!newData.question || !newData.opt1 || !newData.opt2 || !newData.correct || !newData.subject){
+        alert("يرجى ملء جميع بيانات السؤال.");
+        return;
+    }
+
+    EDIT_INDEX = Number.isNaN(idx) || idx < 0 ? null : idx;
+    saveToCloud(newData);
+};
+
+async function saveToCloud(data){
+    if(!isAdmin()){
+        alert("غير مصرح لك.");
+        return;
+    }
+
+    const q=data || {
+        question:document.getElementById("adm-q").value.trim(),
+        opt1:document.getElementById("adm-o1").value.trim(),
+        opt2:document.getElementById("adm-o2").value.trim(),
+        correct:document.getElementById("adm-c").value.trim(),
+        subject:document.getElementById("adm-sub").value.trim()
+    };
+
+    if(!q.question || !q.subject){
+        alert("يرجى ملء نص السؤال واسم المادة على الأقل");
+        return;
+    }
+
+    const payload={
+        action:EDIT_INDEX === null ? "add" : "update",
+        index:EDIT_INDEX,
+        question:q.question,
+        opt1:q.opt1,
+        opt2:q.opt2,
+        correct:q.correct,
+        subject:q.subject,
+        adminEmail:CURRENT_USER?.email || ""
+    };
+
+    toggleSync("sync");
+
+    try{
+        await fetch(API_URL,{
+            method:"POST",
+            body:JSON.stringify(payload)
+        });
+
+        alert("تم الحفظ في السحابة بنجاح ✅");
+        location.reload();
+    }catch(e){
+        console.error(e);
+        alert("خطأ في الاتصال");
+        toggleSync("error");
+    }
+}
+
+window.deleteSelected=async function(){
+    if(!isAdmin()){
+        alert("غير مصرح لك.");
+        return;
+    }
+
+    const selected=document.querySelectorAll(".selected-card");
+    const indices=Array.from(selected)
+        .map(c=>parseInt(c.dataset.index,10))
+        .filter(n=>!Number.isNaN(n))
+        .sort((a,b)=>b-a);
+
+    if(indices.length===0){
+        alert("يرجى تحديد الأسئلة المراد حذفها أولاً بالضغط عليها (سيتحول إطارها للأحمر)");
+        return;
+    }
+
+    if(!confirm(`هل أنت متأكد من حذف ${indices.length} سؤال نهائياً من السحابة؟`))
+        return;
+
+    toggleSync("sync");
+
+    try{
+        await fetch(API_URL,{
+            method:"POST",
+            body:JSON.stringify({
+                action:"bulkDelete",
+                indices,
+                adminEmail:CURRENT_USER?.email || ""
+            })
+        });
+
+        indices.forEach(idx=>ADMIN_DATA.splice(idx,1));
+
+        alert("تم الحذف بنجاح من قاعدة البيانات");
+        renderAdminDashboard(window.allLogs);
+    }catch(e){
+        console.error("Delete Error:",e);
+        alert("عذراً، حدث خطأ أثناء الاتصال بالسحابة");
+        toggleSync("error");
+    }
+};
+
+/* =========================================================
+   حفظ تلقائي قبل مغادرة الصفحة
+   ========================================================= */
+window.addEventListener("visibilitychange",()=>{
+    if(document.visibilityState==="hidden"){
+        saveProgressNow(true).catch(()=>{});
+    }
+});
+
+window.addEventListener("beforeunload",()=>{
+    saveProgressNow(true).catch(()=>{});
+});
+
 </script>
+
+<footer style="text-align:center;padding:20px;margin-top:50px;border-top:1px solid rgba(255,255,255,.05);background:rgba(15,23,42,.5);color:rgba(255,255,255,.5);font-size:.85rem">
+    &copy; 2026 <span style="color:var(--scu-gold);font-weight:bold">OSAMA SINGER</span>. All Rights Reserved.
+</footer>
 
 </body>
 </html>
