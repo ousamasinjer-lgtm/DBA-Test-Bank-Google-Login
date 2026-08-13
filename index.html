@@ -774,142 +774,345 @@ window.switchMode = function(type,ev){
 /* =========================================================
    بدء المادة
    ========================================================= */
-window.startContent = async function(sub, ev) {
+window.startContent = async function (sub, ev) {
 
-    try {
+    console.log("تم اختيار المادة:", sub);
 
-        console.log("بدء المادة:", sub);
+    // إزالة الفلاش
+    document
+        .getElementById("sidebar-main")
+        ?.classList.remove("flash-alert");
 
-        // التأكد من وجود بيانات
-        if (!Array.isArray(ALL_DATA) || ALL_DATA.length === 0) {
-            alert("الأسئلة لم يتم تحميلها بعد. يرجى تحديث الصفحة.");
-            return;
-        }
 
-        // اسم المادة
-        sub = String(sub || "").trim();
+    // إزالة التحديد من كل المواد
+    document
+        .querySelectorAll(".sub-item")
+        .forEach(el => el.classList.remove("active"));
 
-        if (!sub) {
-            alert("اسم المادة غير صحيح.");
-            return;
-        }
 
-        // تتبع المستخدم بدون تعطيل ظهور الأسئلة
-        if (typeof trackUser === "function") {
-            trackUser(sub).catch(error => {
-                console.log("Tracking skipped:", error);
-            });
-        }
+    // تحديد المادة الحالية
+    if (ev && ev.currentTarget) {
+        ev.currentTarget.classList.add("active");
+    }
 
-        // إزالة الفلاش
+
+    // التأكد من تحميل البيانات
+    if (!Array.isArray(ALL_DATA) || ALL_DATA.length === 0) {
+
+        console.error("ALL_DATA فارغة:", ALL_DATA);
+
+        alert("لم يتم تحميل الأسئلة بعد. قم بتحديث الصفحة وحاول مرة أخرى.");
+
+        return;
+    }
+
+
+    // حفظ اسم المادة
+    CURRENT_SUBJECT = String(sub || "").trim();
+
+
+    console.log("المادة الحالية:", CURRENT_SUBJECT);
+
+
+    // فلترة الأسئلة
+    const filtered = ALL_DATA
+        .map(q => {
+
+            return {
+                question: String(q.question || "").trim(),
+
+                opt1: String(
+                    q.opt1 ||
+                    q.option1 ||
+                    (q.options ? q.options[0] : "") ||
+                    ""
+                ).trim(),
+
+                opt2: String(
+                    q.opt2 ||
+                    q.option2 ||
+                    (q.options ? q.options[1] : "") ||
+                    ""
+                ).trim(),
+
+                correct: String(
+                    q.correct ||
+                    q.answer ||
+                    q.correctAnswer ||
+                    ""
+                ).trim(),
+
+                subject: String(
+                    q.subject ||
+                    "عام"
+                ).trim()
+            };
+
+        })
+        .filter(q => q.subject === CURRENT_SUBJECT);
+
+
+    console.log("عدد الأسئلة:", filtered.length);
+    console.log("الأسئلة:", filtered);
+
+
+    // لو مفيش أسئلة
+    if (filtered.length === 0) {
+
+        document.getElementById("content-area").innerHTML = `
+
+            <div style="
+                text-align:center;
+                padding-top:100px;
+                opacity:0.7;
+            ">
+
+                <i class="fa-solid fa-circle-exclamation fa-3x"
+                   style="color:var(--danger)">
+                </i>
+
+                <h3>
+                    لا توجد أسئلة لهذه المادة
+                </h3>
+
+                <p>
+                    المادة المختارة:
+                    <b>${CURRENT_SUBJECT}</b>
+                </p>
+
+            </div>
+
+        `;
+
+
         document
-            .getElementById("sidebar-main")
-            ?.classList.remove("flash-alert");
+            .getElementById("stats-area")
+            .classList.add("hidden");
 
 
-        // تحديد المادة المختارة
         document
-            .querySelectorAll(".sub-item")
-            .forEach(el => el.classList.remove("active"));
-
-        if (ev?.currentTarget) {
-            ev.currentTarget.classList.add("active");
-        }
+            .getElementById("action-footer")
+            .classList.add("hidden");
 
 
-        // فلترة الأسئلة
-        const filtered = ALL_DATA.filter(q =>
-            String(q.subject || "").trim() === sub
-        );
+        return;
+    }
 
 
-        console.log(
-            "المادة:",
-            sub,
-            "عدد الأسئلة:",
-            filtered.length
-        );
+    // خلط الأسئلة
+    SHUFFLED_QUESTIONS = [...filtered]
+        .sort(() => Math.random() - 0.5);
 
 
-        // لو مفيش أسئلة
-        if (filtered.length === 0) {
-
-            document.getElementById("content-area").innerHTML = `
-                <div class="q-stream-card">
-                    <h3 style="text-align:center;">
-                        لا توجد أسئلة لهذه المادة
-                    </h3>
-
-                    <p style="text-align:center;">
-                        المادة: ${sub}
-                    </p>
-                </div>
-            `;
-
-            document
-                .getElementById("stats-area")
-                .classList.add("hidden");
-
-            document
-                .getElementById("action-footer")
-                .classList.add("hidden");
-
-            return;
-        }
+    // تصفير الإجابات
+    USER_ANSWERS = {};
 
 
-        // حفظ المادة الحالية
-        CURRENT_SUBJECT = sub;
+    // اسم المادة
+    document.getElementById(
+        "active-sub-name"
+    ).innerText = CURRENT_SUBJECT;
 
 
-        // خلط الأسئلة
-        SHUFFLED_QUESTIONS =
-            [...filtered]
-            .sort(() => Math.random() - 0.5);
+    // إظهار الإحصائيات
+    document
+        .getElementById("stats-area")
+        .classList.remove("hidden");
 
 
-        // تصفير الإجابات
-        USER_ANSWERS = {};
+    // إخفاء النتيجة القديمة
+    document
+        .getElementById("evaluation-result")
+        .classList.add("hidden");
 
 
-        // استخدام دالة عرض الأسئلة الموجودة في مشروعك
-        if (typeof renderQuestions === "function") {
+    // إظهار المحتوى
+    document
+        .getElementById("content-area")
+        .classList.remove("hidden");
 
-            renderQuestions(CURRENT_SUBJECT, false);
 
-        } else {
+    // عدد الأسئلة المتبقية
+    document.getElementById(
+        "rem-q"
+    ).innerText = SHUFFLED_QUESTIONS.length;
 
-            console.error("renderQuestions غير موجودة");
 
-            alert(
-                "حدثت مشكلة: دالة renderQuestions غير موجودة في الكود."
-            );
+    // تتبع المستخدم
+    if (typeof trackUser === "function") {
+
+        try {
+
+            await trackUser(CURRENT_SUBJECT);
+
+        } catch (error) {
+
+            console.log("Tracking skipped");
 
         }
-
-
-        // حفظ التقدم لو الدالة موجودة
-        if (typeof saveProgressNow === "function") {
-
-            saveProgressNow().catch(error => {
-                console.log("Save progress skipped:", error);
-            });
-
-        }
-
-    } catch (error) {
-
-        console.error("Start Content Error:", error);
-
-        alert(
-            "حدث خطأ أثناء فتح المادة.\n" +
-            error.message
-        );
 
     }
 
-};
 
+    // ==============================
+    // إنشاء الأسئلة
+    // ==============================
+
+    const contentArea =
+        document.getElementById("content-area");
+
+
+    contentArea.innerHTML = "";
+
+
+    SHUFFLED_QUESTIONS.forEach((q, i) => {
+
+        const card =
+            document.createElement("div");
+
+
+        card.className =
+            "q-stream-card";
+
+
+        card.id =
+            `question-card-${i}`;
+
+
+        // رقم السؤال
+        const number =
+            document.createElement("div");
+
+
+        number.style.cssText = `
+            font-size:0.8rem;
+            color:var(--scu-gold);
+            margin-bottom:10px;
+        `;
+
+
+        number.innerText =
+            `سؤال رقم ${i + 1}`;
+
+
+        // السؤال
+        const title =
+            document.createElement("h3");
+
+
+        title.style.margin =
+            "0 0 20px 0";
+
+
+        title.innerText =
+            q.question;
+
+
+        // مجموعة الاختيارات
+        const group =
+            document.createElement("div");
+
+
+        group.id =
+            `group-${i}`;
+
+
+        // ==============================
+        // الاختيار الأول
+        // ==============================
+
+        const btn1 =
+            document.createElement("div");
+
+
+        btn1.className =
+            "opt-btn";
+
+
+        btn1.innerText =
+            q.opt1;
+
+
+        btn1.dataset.answer =
+            q.opt1;
+
+
+        btn1.onclick = function (event) {
+
+            handleOptionClick(
+                event,
+                i,
+                q.opt1,
+                q.correct
+            );
+
+        };
+
+
+        // ==============================
+        // الاختيار الثاني
+        // ==============================
+
+        const btn2 =
+            document.createElement("div");
+
+
+        btn2.className =
+            "opt-btn";
+
+
+        btn2.innerText =
+            q.opt2;
+
+
+        btn2.dataset.answer =
+            q.opt2;
+
+
+        btn2.onclick = function (event) {
+
+            handleOptionClick(
+                event,
+                i,
+                q.opt2,
+                q.correct
+            );
+
+        };
+
+
+        // تجميع العناصر
+        group.appendChild(btn1);
+
+        group.appendChild(btn2);
+
+        card.appendChild(number);
+
+        card.appendChild(title);
+
+        card.appendChild(group);
+
+        contentArea.appendChild(card);
+
+    });
+
+
+    // إظهار زر النتيجة
+    document
+        .getElementById("action-footer")
+        .classList.remove("hidden");
+
+
+    // النزول للأسئلة
+    contentArea.scrollIntoView({
+
+        behavior: "smooth",
+
+        block: "start"
+
+    });
+
+};
 function renderQuestions(sub,isResume=false){
     document.getElementById("active-sub-name").innerText = sub;
     document.getElementById("stats-area").classList.remove("hidden");
