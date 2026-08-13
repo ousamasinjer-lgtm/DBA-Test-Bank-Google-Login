@@ -774,52 +774,251 @@ window.switchMode = function(type,ev){
 /* =========================================================
    بدء المادة
    ========================================================= */
-window.startContent = async function(sub,ev){
-    if(!CURRENT_USER){
-        alert("يرجى تسجيل الدخول بحساب Google أولاً.");
+window.startContent = async function(sub, ev) {
+
+    console.log("تم اختيار المادة:", sub);
+
+    // إزالة الفلاش
+    document
+        .getElementById("sidebar-main")
+        ?.classList.remove("flash-alert");
+
+
+    // تحديد المادة المختارة
+    document
+        .querySelectorAll(".sub-item")
+        .forEach(el => el.classList.remove("active"));
+
+    if (ev && ev.currentTarget) {
+        ev.currentTarget.classList.add("active");
+    }
+
+
+    // التأكد من وجود البيانات
+    if (!ALL_DATA || ALL_DATA.length === 0) {
+
+        alert("لم يتم تحميل الأسئلة بعد. حاول تحديث الصفحة.");
+
         return;
     }
 
-    /* لو فيه جلسة مختلفة محفوظة، لا نسمح بالكتابة فوقها بدون تأكيد */
-    const saved = await loadSavedProgress();
-    if(
-        hasUsableProgress(saved) &&
-        saved.subject &&
-        saved.subject !== sub &&
-        Object.keys(saved.answers || {}).length > 0
-    ){
-        const continueSaved = confirm(
-            `يوجد اختبار غير مكتمل في مادة "${saved.subject}".\n\n` +
-            `هل تريد استكماله أولاً؟\n\n` +
-            `موافق = استكمال الاختبار السابق\n` +
-            `إلغاء = بدء مادة "${sub}" جديدة`
-        );
 
-        if(continueSaved){
-            resumeSavedProgress(saved);
-            return;
-        }
+    // حفظ اسم المادة الحالية
+    CURRENT_SUBJECT = String(sub).trim();
 
-        await clearSavedProgress();
+
+    // فلترة الأسئلة الخاصة بالمادة
+    const filtered = ALL_DATA.filter(q => {
+
+        const questionSubject =
+            String(q.subject || "")
+            .trim();
+
+        return questionSubject === CURRENT_SUBJECT;
+
+    });
+
+
+    console.log(
+        "عدد الأسئلة الموجودة:",
+        filtered.length
+    );
+
+
+    // لو مفيش أسئلة
+    if (filtered.length === 0) {
+
+        document.getElementById("content-area").innerHTML = `
+
+            <div style="
+                text-align:center;
+                padding-top:100px;
+                opacity:0.7;
+            ">
+
+                <i class="fa-solid fa-circle-exclamation fa-3x"
+                   style="color:var(--danger)">
+                </i>
+
+                <h3>
+                    لا توجد أسئلة لهذه المادة
+                </h3>
+
+                <p>
+                    المادة المختارة:
+                    <b>${CURRENT_SUBJECT}</b>
+                </p>
+
+            </div>
+
+        `;
+
+        document
+            .getElementById("stats-area")
+            .classList.add("hidden");
+
+        document
+            .getElementById("action-footer")
+            .classList.add("hidden");
+
+        return;
     }
 
-    await trackUser(sub);
 
-    document.getElementById("sidebar-main").classList.remove("flash-alert");
+    // خلط الأسئلة
+    SHUFFLED_QUESTIONS =
+        [...filtered]
+        .sort(() => Math.random() - 0.5);
 
-    document.querySelectorAll(".sub-item").forEach(el=>el.classList.remove("active"));
-    if(ev?.currentTarget) ev.currentTarget.classList.add("active");
 
-    const filtered = ALL_DATA.filter(q=>String(q.subject || "").trim() === String(sub).trim());
-
-    SHUFFLED_QUESTIONS = [...filtered].sort(()=>Math.random()-.5);
+    // تصفير الإجابات
     USER_ANSWERS = {};
-    CURRENT_SUBJECT = sub;
 
-    renderQuestions(sub,false);
 
-    /* يبدأ حفظ الجلسة بمجرد فتح المادة */
-    await saveProgressNow();
+    // إظهار اسم المادة
+    document.getElementById(
+        "active-sub-name"
+    ).innerText = CURRENT_SUBJECT;
+
+
+    // إظهار الإحصائيات
+    document
+        .getElementById("stats-area")
+        .classList.remove("hidden");
+
+
+    document
+        .getElementById("evaluation-result")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("content-area")
+        .classList.remove("hidden");
+
+
+    // عدد الأسئلة المتبقية
+    document.getElementById(
+        "rem-q"
+    ).innerText =
+        SHUFFLED_QUESTIONS.length;
+
+
+    // تتبع المستخدم لو الدالة موجودة
+    if (typeof trackUser === "function") {
+
+        try {
+            await trackUser(CURRENT_SUBJECT);
+        } catch (error) {
+            console.log("Tracking skipped");
+        }
+
+    }
+
+
+    // عرض الأسئلة
+    document.getElementById(
+        "content-area"
+    ).innerHTML = SHUFFLED_QUESTIONS.map((q, i) => {
+
+        const opt1 =
+            String(q.opt1 || "")
+            .trim();
+
+        const opt2 =
+            String(q.opt2 || "")
+            .trim();
+
+        const correct =
+            String(q.correct || "")
+            .trim();
+
+
+        return `
+
+        <div
+            class="q-stream-card"
+            id="question-card-${i}"
+        >
+
+            <div style="
+                font-size:0.8rem;
+                color:var(--scu-gold);
+                margin-bottom:10px;
+            ">
+                سؤال رقم ${i + 1}
+            </div>
+
+
+            <h3 style="
+                margin:0 0 20px 0;
+            ">
+                ${q.question}
+            </h3>
+
+
+            <div id="group-${i}">
+
+
+                <!-- الاختيار الأول -->
+
+                <div
+                    class="opt-btn"
+                    data-answer="${opt1}"
+                    onclick='handleOptionClick(
+                        event,
+                        ${i},
+                        ${JSON.stringify(opt1)},
+                        ${JSON.stringify(correct)}
+                    )'
+                >
+
+                    ${opt1}
+
+                </div>
+
+
+                <!-- الاختيار الثاني -->
+
+                <div
+                    class="opt-btn"
+                    data-answer="${opt2}"
+                    onclick='handleOptionClick(
+                        event,
+                        ${i},
+                        ${JSON.stringify(opt2)},
+                        ${JSON.stringify(correct)}
+                    )'
+                >
+
+                    ${opt2}
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+        `;
+
+    }).join("");
+
+
+    // إظهار زر اعتماد النتيجة
+    document
+        .getElementById("action-footer")
+        .classList.remove("hidden");
+
+
+    // النزول للأسئلة
+    document
+        .getElementById("content-area")
+        .scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
 };
 
 function renderQuestions(sub,isResume=false){
