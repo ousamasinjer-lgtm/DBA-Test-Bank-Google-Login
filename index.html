@@ -848,7 +848,7 @@ window.switchMode = function(type,ev){
 /* =========================================================
    بدء المادة
    ========================================================= */
-window.startContent = async function (sub, ev) {
+window.startContent = async function(sub, ev) {
 
     console.log("تم اختيار المادة:", sub);
 
@@ -858,14 +858,14 @@ window.startContent = async function (sub, ev) {
         ?.classList.remove("flash-alert");
 
 
-    // إزالة التحديد من كل المواد
+    // إزالة التحديد من المواد
     document
         .querySelectorAll(".sub-item")
         .forEach(el => el.classList.remove("active"));
 
 
-    // تحديد المادة الحالية
-    if (ev && ev.currentTarget) {
+    // تحديد المادة المختارة
+    if (ev?.currentTarget) {
         ev.currentTarget.classList.add("active");
     }
 
@@ -875,75 +875,63 @@ window.startContent = async function (sub, ev) {
 
         console.error("ALL_DATA فارغة:", ALL_DATA);
 
-        alert("لم يتم تحميل الأسئلة بعد. قم بتحديث الصفحة وحاول مرة أخرى.");
+        alert(
+            "لم يتم تحميل الأسئلة بعد. قم بتحديث الصفحة وحاول مرة أخرى."
+        );
 
         return;
     }
 
 
-    // حفظ اسم المادة
+    // حفظ اسم المادة الحالية
     CURRENT_SUBJECT = String(sub || "").trim();
 
 
-    console.log("المادة الحالية:", CURRENT_SUBJECT);
+    console.log(
+        "المادة الحالية:",
+        CURRENT_SUBJECT
+    );
 
 
-    // فلترة الأسئلة
-    const filtered = ALL_DATA
-        .map(q => {
+    // فلترة الأسئلة باستخدام البيانات الموحدة
+    const filtered = ALL_DATA.filter(q => {
 
-            return {
-                question: String(q.question || "").trim(),
+        const question = normalizeQuestionRecord(q);
 
-                opt1: String(
-                    q.opt1 ||
-                    q.option1 ||
-                    (q.options ? q.options[0] : "") ||
-                    ""
-                ).trim(),
+        return String(question.subject || "")
+            .trim()
+            .toLowerCase()
+            ===
+            CURRENT_SUBJECT
+            .trim()
+            .toLowerCase();
 
-                opt2: String(
-                    q.opt2 ||
-                    q.option2 ||
-                    (q.options ? q.options[1] : "") ||
-                    ""
-                ).trim(),
-
-                correct: String(
-                    q.correct ||
-                    q.answer ||
-                    q.correctAnswer ||
-                    ""
-                ).trim(),
-
-                subject: String(
-                    q.subject ||
-                    "عام"
-                ).trim()
-            };
-
-        })
-        .filter(q => q.subject === CURRENT_SUBJECT);
+    });
 
 
-    console.log("عدد الأسئلة:", filtered.length);
-    console.log("الأسئلة:", filtered);
+    console.log(
+        "عدد الأسئلة الموجودة:",
+        filtered.length
+    );
 
 
-    // لو مفيش أسئلة
+    // لو لا توجد أسئلة
     if (filtered.length === 0) {
 
-        document.getElementById("content-area").innerHTML = `
+        document.getElementById(
+            "content-area"
+        ).innerHTML = `
 
             <div style="
                 text-align:center;
                 padding-top:100px;
-                opacity:0.7;
+                opacity:.7;
             ">
 
-                <i class="fa-solid fa-circle-exclamation fa-3x"
-                   style="color:var(--danger)">
-                </i>
+                <i
+                    class="fa-solid fa-circle-exclamation fa-3x"
+                    style="color:var(--danger)"
+                ></i>
 
                 <h3>
                     لا توجد أسئلة لهذه المادة
@@ -973,8 +961,9 @@ window.startContent = async function (sub, ev) {
     }
 
 
-    // خلط الأسئلة
-    SHUFFLED_QUESTIONS = [...filtered]
+    // توحيد شكل الأسئلة ثم خلطها
+    SHUFFLED_QUESTIONS = filtered
+        .map(q => normalizeQuestionRecord(q))
         .sort(() => Math.random() - 0.5);
 
 
@@ -982,7 +971,7 @@ window.startContent = async function (sub, ev) {
     USER_ANSWERS = {};
 
 
-    // اسم المادة
+    // إظهار اسم المادة
     document.getElementById(
         "active-sub-name"
     ).innerText = CURRENT_SUBJECT;
@@ -1000,16 +989,17 @@ window.startContent = async function (sub, ev) {
         .classList.add("hidden");
 
 
-    // إظهار المحتوى
+    // إظهار منطقة الأسئلة
     document
         .getElementById("content-area")
         .classList.remove("hidden");
 
 
-    // عدد الأسئلة المتبقية
+    // عدد الأسئلة
     document.getElementById(
         "rem-q"
-    ).innerText = SHUFFLED_QUESTIONS.length;
+    ).innerText =
+        SHUFFLED_QUESTIONS.length;
 
 
     // تتبع المستخدم
@@ -1017,16 +1007,27 @@ window.startContent = async function (sub, ev) {
 
         try {
 
-            await trackUser(CURRENT_SUBJECT);
+            await trackUser(
+                CURRENT_SUBJECT
+            );
 
         } catch (error) {
 
-            console.log("Tracking skipped");
+            console.log(
+                "Tracking skipped"
+            );
 
         }
 
     }
 
+
+    // استخدام دالة العرض الموجودة عندك
+    renderQuestions(
+        CURRENT_SUBJECT
+    );
+
+};
 
     // ==============================
     // إنشاء الأسئلة
