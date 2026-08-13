@@ -457,13 +457,53 @@ function normalizeAnswer(v){ return normalize(v).replace(/\s+/g," "); }
 function sameAnswer(a,b){ return normalizeAnswer(a).localeCompare(normalizeAnswer(b),"ar",{sensitivity:"base"}) === 0; }
 
 function normalizeQuestionRecord(q){
+
     return {
-        question: normalize(q?.question),
-        opt1: normalize(q?.opt1 || q?.option1 || q?.options?.[0]),
-        opt2: normalize(q?.opt2 || q?.option2 || q?.options?.[1]),
-        correct: normalize(q?.correct || q?.answer || q?.correctAnswer || q?.rightAnswer),
-        subject: normalize(q?.subject || "عام")
+
+        question: normalize(
+            q?.question ||
+            q?.Question ||
+            q?.QUESTION
+        ),
+
+        opt1: normalize(
+            q?.opt1 ||
+            q?.option1 ||
+            q?.Option1 ||
+            q?.["Option 1"] ||
+            q?.["الخيار الأول"] ||
+            q?.options?.[0]
+        ),
+
+        opt2: normalize(
+            q?.opt2 ||
+            q?.option2 ||
+            q?.Option2 ||
+            q?.["Option 2"] ||
+            q?.["الخيار الثاني"] ||
+            q?.options?.[1]
+        ),
+
+        correct: normalize(
+            q?.correct ||
+            q?.answer ||
+            q?.correctAnswer ||
+            q?.rightAnswer ||
+            q?.Correct ||
+            q?.["Correct Answer"] ||
+            q?.["الإجابة الصحيحة"]
+        ),
+
+        subject: normalize(
+            q?.subject ||
+            q?.Subject ||
+            q?.SUBJECT ||
+            q?.["اسم المادة"] ||
+            "عام"
+        )
+
     };
+
 }
 
 function showToast(message, type="normal"){
