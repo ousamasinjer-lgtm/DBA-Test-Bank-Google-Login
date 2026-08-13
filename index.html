@@ -776,248 +776,137 @@ window.switchMode = function(type,ev){
    ========================================================= */
 window.startContent = async function(sub, ev) {
 
-    console.log("تم اختيار المادة:", sub);
+    try {
 
-    // إزالة الفلاش
-    document
-        .getElementById("sidebar-main")
-        ?.classList.remove("flash-alert");
+        console.log("بدء المادة:", sub);
 
-
-    // تحديد المادة المختارة
-    document
-        .querySelectorAll(".sub-item")
-        .forEach(el => el.classList.remove("active"));
-
-    if (ev && ev.currentTarget) {
-        ev.currentTarget.classList.add("active");
-    }
-
-
-    // التأكد من وجود البيانات
-    if (!ALL_DATA || ALL_DATA.length === 0) {
-
-        alert("لم يتم تحميل الأسئلة بعد. حاول تحديث الصفحة.");
-
-        return;
-    }
-
-
-    // حفظ اسم المادة الحالية
-    CURRENT_SUBJECT = String(sub).trim();
-
-
-    // فلترة الأسئلة الخاصة بالمادة
-    const filtered = ALL_DATA.filter(q => {
-
-        const questionSubject =
-            String(q.subject || "")
-            .trim();
-
-        return questionSubject === CURRENT_SUBJECT;
-
-    });
-
-
-    console.log(
-        "عدد الأسئلة الموجودة:",
-        filtered.length
-    );
-
-
-    // لو مفيش أسئلة
-    if (filtered.length === 0) {
-
-        document.getElementById("content-area").innerHTML = `
-
-            <div style="
-                text-align:center;
-                padding-top:100px;
-                opacity:0.7;
-            ">
-
-                <i class="fa-solid fa-circle-exclamation fa-3x"
-                   style="color:var(--danger)">
-                </i>
-
-                <h3>
-                    لا توجد أسئلة لهذه المادة
-                </h3>
-
-                <p>
-                    المادة المختارة:
-                    <b>${CURRENT_SUBJECT}</b>
-                </p>
-
-            </div>
-
-        `;
-
-        document
-            .getElementById("stats-area")
-            .classList.add("hidden");
-
-        document
-            .getElementById("action-footer")
-            .classList.add("hidden");
-
-        return;
-    }
-
-
-    // خلط الأسئلة
-    SHUFFLED_QUESTIONS =
-        [...filtered]
-        .sort(() => Math.random() - 0.5);
-
-
-    // تصفير الإجابات
-    USER_ANSWERS = {};
-
-
-    // إظهار اسم المادة
-    document.getElementById(
-        "active-sub-name"
-    ).innerText = CURRENT_SUBJECT;
-
-
-    // إظهار الإحصائيات
-    document
-        .getElementById("stats-area")
-        .classList.remove("hidden");
-
-
-    document
-        .getElementById("evaluation-result")
-        .classList.add("hidden");
-
-
-    document
-        .getElementById("content-area")
-        .classList.remove("hidden");
-
-
-    // عدد الأسئلة المتبقية
-    document.getElementById(
-        "rem-q"
-    ).innerText =
-        SHUFFLED_QUESTIONS.length;
-
-
-    // تتبع المستخدم لو الدالة موجودة
-    if (typeof trackUser === "function") {
-
-        try {
-            await trackUser(CURRENT_SUBJECT);
-        } catch (error) {
-            console.log("Tracking skipped");
+        // التأكد من وجود بيانات
+        if (!Array.isArray(ALL_DATA) || ALL_DATA.length === 0) {
+            alert("الأسئلة لم يتم تحميلها بعد. يرجى تحديث الصفحة.");
+            return;
         }
 
+        // اسم المادة
+        sub = String(sub || "").trim();
+
+        if (!sub) {
+            alert("اسم المادة غير صحيح.");
+            return;
+        }
+
+        // تتبع المستخدم بدون تعطيل ظهور الأسئلة
+        if (typeof trackUser === "function") {
+            trackUser(sub).catch(error => {
+                console.log("Tracking skipped:", error);
+            });
+        }
+
+        // إزالة الفلاش
+        document
+            .getElementById("sidebar-main")
+            ?.classList.remove("flash-alert");
+
+
+        // تحديد المادة المختارة
+        document
+            .querySelectorAll(".sub-item")
+            .forEach(el => el.classList.remove("active"));
+
+        if (ev?.currentTarget) {
+            ev.currentTarget.classList.add("active");
+        }
+
+
+        // فلترة الأسئلة
+        const filtered = ALL_DATA.filter(q =>
+            String(q.subject || "").trim() === sub
+        );
+
+
+        console.log(
+            "المادة:",
+            sub,
+            "عدد الأسئلة:",
+            filtered.length
+        );
+
+
+        // لو مفيش أسئلة
+        if (filtered.length === 0) {
+
+            document.getElementById("content-area").innerHTML = `
+                <div class="q-stream-card">
+                    <h3 style="text-align:center;">
+                        لا توجد أسئلة لهذه المادة
+                    </h3>
+
+                    <p style="text-align:center;">
+                        المادة: ${sub}
+                    </p>
+                </div>
+            `;
+
+            document
+                .getElementById("stats-area")
+                .classList.add("hidden");
+
+            document
+                .getElementById("action-footer")
+                .classList.add("hidden");
+
+            return;
+        }
+
+
+        // حفظ المادة الحالية
+        CURRENT_SUBJECT = sub;
+
+
+        // خلط الأسئلة
+        SHUFFLED_QUESTIONS =
+            [...filtered]
+            .sort(() => Math.random() - 0.5);
+
+
+        // تصفير الإجابات
+        USER_ANSWERS = {};
+
+
+        // استخدام دالة عرض الأسئلة الموجودة في مشروعك
+        if (typeof renderQuestions === "function") {
+
+            renderQuestions(CURRENT_SUBJECT, false);
+
+        } else {
+
+            console.error("renderQuestions غير موجودة");
+
+            alert(
+                "حدثت مشكلة: دالة renderQuestions غير موجودة في الكود."
+            );
+
+        }
+
+
+        // حفظ التقدم لو الدالة موجودة
+        if (typeof saveProgressNow === "function") {
+
+            saveProgressNow().catch(error => {
+                console.log("Save progress skipped:", error);
+            });
+
+        }
+
+    } catch (error) {
+
+        console.error("Start Content Error:", error);
+
+        alert(
+            "حدث خطأ أثناء فتح المادة.\n" +
+            error.message
+        );
+
     }
-
-
-    // عرض الأسئلة
-    document.getElementById(
-        "content-area"
-    ).innerHTML = SHUFFLED_QUESTIONS.map((q, i) => {
-
-        const opt1 =
-            String(q.opt1 || "")
-            .trim();
-
-        const opt2 =
-            String(q.opt2 || "")
-            .trim();
-
-        const correct =
-            String(q.correct || "")
-            .trim();
-
-
-        return `
-
-        <div
-            class="q-stream-card"
-            id="question-card-${i}"
-        >
-
-            <div style="
-                font-size:0.8rem;
-                color:var(--scu-gold);
-                margin-bottom:10px;
-            ">
-                سؤال رقم ${i + 1}
-            </div>
-
-
-            <h3 style="
-                margin:0 0 20px 0;
-            ">
-                ${q.question}
-            </h3>
-
-
-            <div id="group-${i}">
-
-
-                <!-- الاختيار الأول -->
-
-                <div
-                    class="opt-btn"
-                    data-answer="${opt1}"
-                    onclick='handleOptionClick(
-                        event,
-                        ${i},
-                        ${JSON.stringify(opt1)},
-                        ${JSON.stringify(correct)}
-                    )'
-                >
-
-                    ${opt1}
-
-                </div>
-
-
-                <!-- الاختيار الثاني -->
-
-                <div
-                    class="opt-btn"
-                    data-answer="${opt2}"
-                    onclick='handleOptionClick(
-                        event,
-                        ${i},
-                        ${JSON.stringify(opt2)},
-                        ${JSON.stringify(correct)}
-                    )'
-                >
-
-                    ${opt2}
-
-                </div>
-
-
-            </div>
-
-        </div>
-
-        `;
-
-    }).join("");
-
-
-    // إظهار زر اعتماد النتيجة
-    document
-        .getElementById("action-footer")
-        .classList.remove("hidden");
-
-
-    // النزول للأسئلة
-    document
-        .getElementById("content-area")
-        .scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
 
 };
 
