@@ -501,21 +501,95 @@ setInterval(()=>{
 /* =========================================================
    Google Sheets: تحميل الأسئلة
    ========================================================= */
-async function loadMainData(){
-    const res = await fetch(API_URL + "?nocache=" + Date.now());
-    if(!res.ok) throw new Error("تعذر تحميل الأسئلة");
+async function loadMainData() {
 
-    const raw = await res.json();
+    try {
 
-    ALL_DATA = Array.isArray(raw)
-        ? raw.map(normalizeQuestionRecord)
-             .filter(q => q.question !== "" && q.opt1 !== "" && q.opt2 !== "")
-        : (raw && Array.isArray(raw.data)
-            ? raw.data.map(normalizeQuestionRecord)
-                   .filter(q => q.question !== "" && q.opt1 !== "" && q.opt2 !== "")
-            : []);
+        const res = await fetch(
+            API_URL + "?nocache=" + Date.now()
+        );
 
-    refreshSubjects();
+        if (!res.ok) {
+            throw new Error("تعذر تحميل الأسئلة");
+        }
+
+        const raw = await res.json();
+
+        console.log("RAW DATA:", raw);
+
+
+        // لو السيرفر بيرجع Array مباشرة
+        let records = [];
+
+        if (Array.isArray(raw)) {
+
+            records = raw;
+
+        }
+
+        // لو السيرفر بيرجع البيانات داخل data
+        else if (raw && Array.isArray(raw.data)) {
+
+            records = raw.data;
+
+        }
+
+
+        console.log(
+            "عدد السجلات قبل المعالجة:",
+            records.length
+        );
+
+
+        ALL_DATA = records
+            .map(normalizeQuestionRecord)
+            .filter(q =>
+                q.question &&
+                q.opt1 &&
+                q.opt2 &&
+                q.correct &&
+                q.subject
+            );
+
+
+        console.log(
+            "ALL_DATA بعد المعالجة:",
+            ALL_DATA
+        );
+
+        console.log(
+            "عدد الأسئلة بعد المعالجة:",
+            ALL_DATA.length
+        );
+
+
+        refreshSubjects();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "LOAD ERROR:",
+            error
+        );
+
+        toggleSync("error");
+
+        document.getElementById(
+            "subject-links"
+        ).innerHTML = `
+            <div style="
+                text-align:center;
+                padding:15px;
+                color:var(--danger);
+            ">
+                فشل تحميل الأسئلة
+            </div>
+        `;
+
+    }
+
 }
 
 function refreshSubjects(){
