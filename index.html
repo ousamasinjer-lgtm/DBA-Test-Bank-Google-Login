@@ -1468,28 +1468,88 @@ window.switchAdminTab=function(event,panelId){
 };
 
 function generateLogRows(data){
-    if(!data || !data.length)
-        return '<tr><td colspan="5" style="text-align:center;padding:30px;color:#666">لا توجد سجلات حالياً</td></tr>';
 
-    return data.map(log=>`
-        <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
-            <td style="padding:12px;color:#aaa;font-size:.8rem">
-                ${log.time ? new Date(log.time).toLocaleTimeString("ar-EG") : "-"}
-            </td>
-            <td style="direction:ltr;text-align:left;color:var(--neon-cyan);font-family:monospace">
-                ${escapeHTML(log.googleEmail || log.email || log.userName || "-")}
-            </td>
-            <td style="color:#eee">${escapeHTML(log.subject || "عام")}</td>
-            <td style="direction:ltr;text-align:left;font-size:.75rem;color:#aaa">
-                ${escapeHTML(log.googleEmail || "-")}
-            </td>
-            <td style="text-align:center">
-                <span style="color:${log.type==="New"?"var(--success)":"var(--scu-gold)"};border:1px solid;padding:2px 8px;border-radius:5px;font-size:.7rem">
-                    ${log.type==="New"?"جديد":"متكرر"}
-                </span>
-            </td>
-        </tr>
-    `).join("");
+    if(!data || !data.length){
+        return `
+            <tr>
+                <td colspan="5"
+                    style="text-align:center;padding:30px;color:#666">
+                    لا توجد سجلات حالياً
+                </td>
+            </tr>
+        `;
+    }
+
+    return data.map(log => {
+
+        const user =
+            log.googleEmail ||
+            log.email ||
+            log.userName ||
+            log.user ||
+            "-";
+
+        return `
+            <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+
+                <td style="padding:12px;color:#aaa;font-size:.8rem">
+                    ${
+                        log.time
+                        ? new Date(log.time).toLocaleString("ar-EG")
+                        : "-"
+                    }
+                </td>
+
+                <td style="
+                    direction:ltr;
+                    text-align:left;
+                    color:var(--neon-cyan);
+                    font-family:monospace
+                ">
+                    ${escapeHTML(user)}
+                </td>
+
+                <td style="color:#eee">
+                    ${escapeHTML(log.subject || "عام")}
+                </td>
+
+                <td style="
+                    direction:ltr;
+                    text-align:left;
+                    font-size:.75rem;
+                    color:#aaa
+                ">
+                    ${escapeHTML(user)}
+                </td>
+
+                <td style="text-align:center">
+
+                    <span style="
+                        color:${
+                            log.type === "New"
+                            ? "var(--success)"
+                            : "var(--scu-gold)"
+                        };
+                        border:1px solid;
+                        padding:2px 8px;
+                        border-radius:5px;
+                        font-size:.7rem
+                    ">
+
+                        ${
+                            log.type === "New"
+                            ? "جديد"
+                            : "متكرر"
+                        }
+
+                    </span>
+
+                </td>
+
+            </tr>
+        `;
+
+    }).join("");
 }
 
 function generateQuestionsHtml(){
